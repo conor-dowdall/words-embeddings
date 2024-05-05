@@ -14,7 +14,12 @@ import ie.atu.sw.console.ConsoleColour;
 import ie.atu.sw.console.ConsoleInputOutput;
 
 public class WordEmbeddings {
+    public String fileName;
+
+    public int numberOfWords;
     public String[] words;
+
+    public int numberOfFeatures;
     public double[][] embeddings;
 
     private static String getDefaultWordEmbeddingsFileName() {
@@ -27,73 +32,47 @@ public class WordEmbeddings {
     }
 
     public WordEmbeddings(String fileName) throws Exception {
-        getWordsAndEmbeddingsFromFile(fileName);
+        this.fileName = fileName;
+        getWordsAndEmbeddingsFromFile();
     }
 
-    private void getWordsAndEmbeddingsFromFile(String fileName) throws Exception {
-        long numberOfWords = countFileLines(fileName);
-        initWordsArray(numberOfWords, fileName);
+    private void getWordsAndEmbeddingsFromFile() throws Exception {
+        this.numberOfWords = (int) countFileLines();
+        this.words = new String[this.numberOfWords];
 
-        try (BufferedReader buffer = new BufferedReader(new FileReader(fileName))) {
-            readBufferLinesData(buffer, (int) numberOfWords, fileName);
+        try (BufferedReader buffer = new BufferedReader(new FileReader(this.fileName))) {
+            readBufferLinesData(buffer);
             buffer.close();
         } catch (Exception e) {
             throw e;
         }
     }
 
-    private void initWordsArray(long numberOfWords, String fileName) {
-        if (numberOfWords > Integer.MAX_VALUE - 1)
-            throw new ArrayIndexOutOfBoundsException(
-                    "There are too many words (" + numberOfWords + ") in the provided word-embeddings file: "
-                            + fileName);
-
-        int numberOfWordsInt = (int) numberOfWords;
-        words = new String[numberOfWordsInt];
-    }
-
-    private void readBufferLinesData(BufferedReader buffer, int numberOfWords, String fileName) throws IOException {
-        String embeddingsFileLine = buffer.readLine();
-
-        int numberOfFeatures = countEmbeddingsFeatures(embeddingsFileLine);
-        embeddings = new double[numberOfWords][numberOfFeatures];
-
-        printFileLoadingHeader(fileName, numberOfWords, numberOfFeatures);
-
-        for (int i = 0; i < numberOfWords; i++) {
-            setWordAndEmbeddingsValues(embeddingsFileLine, i, numberOfFeatures, fileName);
-            ConsoleInputOutput.printProgress(i, numberOfWords - 1);
-            embeddingsFileLine = buffer.readLine();
-        }
-    }
-
-    private void printFileLoadingHeader(String fileName, int numberOfWords, int numberOfFeatures) {
-        System.out.println();
-        System.out.println("Loading embeddings from:\t" + fileName);
-        System.out.println("#words:\t\t\t\t" + numberOfWords);
-        System.out.println("#features/word:\t\t\t" + numberOfFeatures);
-    }
-
-    private void setWordAndEmbeddingsValues(String embeddingsFileLine, int lineNumber, int numberOfFeatures,
-            String fileName) {
-        String[] wordAndEmbeddings = embeddingsFileLine.split(", ");
-
-        if (wordAndEmbeddings.length != numberOfFeatures + 1) {
-            System.out.println(ConsoleColour.RESET + "\n");
-            throw new IllegalStateException(
-                    "Line #" + (lineNumber + 1) + " in " + fileName + " has a different format.");
-        }
-
-        words[lineNumber] = wordAndEmbeddings[0];
-
-        for (int i = 0; i < numberOfFeatures; i++)
-            embeddings[lineNumber][i] = Double.parseDouble(wordAndEmbeddings[i + 1]);
-    }
-
-    private long countFileLines(String fileName) throws IOException {
-        Path path = Paths.get(fileName);
+    private long countFileLines() throws IOException {
+        Path path = Paths.get(this.fileName);
         try (Stream<String> stream = Files.lines(path, StandardCharsets.UTF_8)) {
             return stream.count();
+        }
+    }
+
+    // if (numberOfWords > Integer.MAX_VALUE - 1)
+    // throw new ArrayIndexOutOfBoundsException(
+    // "There are too many words (" + numberOfWords + ") in the provided
+    // word-embeddings file: "
+    // + fileName);
+
+    private void readBufferLinesData(BufferedReader buffer) throws IOException {
+        String embeddingsFileLine = buffer.readLine();
+
+        this.numberOfFeatures = countEmbeddingsFeatures(embeddingsFileLine);
+        this.embeddings = new double[this.numberOfWords][this.numberOfFeatures];
+
+        printFileLoadingHeader();
+
+        for (int i = 0; i < this.numberOfWords; i++) {
+            setWordAndEmbeddingsValues(embeddingsFileLine, i);
+            ConsoleInputOutput.printProgress(i, this.numberOfWords - 1);
+            embeddingsFileLine = buffer.readLine();
         }
     }
 
@@ -104,4 +83,27 @@ public class WordEmbeddings {
             throw new IllegalStateException("The file provided is in the wrong format.");
         return stringLength - 1;
     }
+
+    private void printFileLoadingHeader() {
+        System.out.println();
+        System.out.println("Loading embeddings from:\t" + this.fileName);
+        System.out.println("#words:\t\t\t\t" + this.numberOfWords);
+        System.out.println("#features/word:\t\t\t" + this.numberOfFeatures);
+    }
+
+    private void setWordAndEmbeddingsValues(String embeddingsFileLine, int lineNumber) {
+        String[] wordAndEmbeddings = embeddingsFileLine.split(", ");
+
+        if (wordAndEmbeddings.length != this.numberOfFeatures + 1) {
+            System.out.println(ConsoleColour.RESET + "\n");
+            throw new IllegalStateException(
+                    "Line #" + (lineNumber + 1) + " in " + this.fileName + " has a different format.");
+        }
+
+        this.words[lineNumber] = wordAndEmbeddings[0];
+
+        for (int i = 0; i < this.numberOfFeatures; i++)
+            this.embeddings[lineNumber][i] = Double.parseDouble(wordAndEmbeddings[i + 1]);
+    }
+
 }
