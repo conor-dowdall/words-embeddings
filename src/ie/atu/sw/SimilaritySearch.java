@@ -25,13 +25,6 @@ public class SimilaritySearch {
 
         List<String> wordsList = Arrays.asList(wordEmbeddings.words);
         ArrayList<String> sortedWordsList = new ArrayList<String>(wordsList);
-
-        Collections.sort(sortedWordsList, new Comparator<String>() {
-            public int compare(String left, String right) {
-                return vector[wordsList.indexOf(left)] < vector[wordsList.indexOf(right)] ? -1 : 1;
-            }
-        });
-
         Collections.sort(sortedWordsList, Comparator.comparingDouble(s -> vector[wordsList.indexOf(s)]));
 
         System.out.println("Not Similar to '" + wordEmbeddings.words[wordIndex] + "'");
