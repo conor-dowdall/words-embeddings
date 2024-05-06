@@ -61,9 +61,18 @@ public class Vector {
         return sum(multiplyVector);
     }
 
-    public static double euclideanDistance(double[] vector1, double[] vector2) throws Exception {
+    public static double euclideanDistanceNoSqrt(double[] vector1, double[] vector2) throws Exception {
         double[] subtractVector = subtract(vector1, vector2);
         double[] squareVector = square(subtractVector);
         return sum(squareVector);
+    }
+
+    public static double cosineDistance(double[] vector1, double[] vector2) throws Exception {
+        double dotProduct = dotProduct(vector1, vector2);
+
+        double squareSum1 = sum(square(vector1));
+        double squareSum2 = sum(square(vector1));
+
+        return dotProduct / Math.sqrt(squareSum1 * squareSum2);
     }
 }
