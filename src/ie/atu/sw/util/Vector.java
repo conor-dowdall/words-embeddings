@@ -1,12 +1,12 @@
-package ie.atu.sw.vector;
+package ie.atu.sw.util;
 
 public class Vector {
-    public static void ensureEqualLengths(double[] vector1, double[] vector2) throws ArrayIndexOutOfBoundsException {
+    public static void ensureEqualLengths(double[] vector1, double[] vector2) throws Exception {
         if (vector1.length != vector2.length)
-            throw new ArrayIndexOutOfBoundsException("The two vector arrays must be of the same length.");
+            throw new Exception("The two vector arrays must be of the same length.");
     }
 
-    public static double[] add(double[] vector1, double[] vector2) {
+    public static double[] add(double[] vector1, double[] vector2) throws Exception {
         ensureEqualLengths(vector1, vector2);
 
         double[] result = new double[vector1.length];
@@ -17,7 +17,7 @@ public class Vector {
         return result;
     }
 
-    public static double[] subtract(double[] vector1, double[] vector2) {
+    public static double[] subtract(double[] vector1, double[] vector2) throws Exception {
         ensureEqualLengths(vector1, vector2);
 
         double[] result = new double[vector1.length];
@@ -28,7 +28,7 @@ public class Vector {
         return result;
     }
 
-    public static double[] multiply(double[] vector1, double[] vector2) {
+    public static double[] multiply(double[] vector1, double[] vector2) throws Exception {
         ensureEqualLengths(vector1, vector2);
 
         double[] result = new double[vector1.length];
@@ -56,12 +56,12 @@ public class Vector {
         return vectorSum;
     }
 
-    public static double dotProduct(double[] vector1, double[] vector2) {
+    public static double dotProduct(double[] vector1, double[] vector2) throws Exception {
         double[] multiplyVector = multiply(vector1, vector2);
         return sum(multiplyVector);
     }
 
-    public static double euclideanDistance(double[] vector1, double[] vector2) {
+    public static double euclideanDistance(double[] vector1, double[] vector2) throws Exception {
         double[] subtractVector = subtract(vector1, vector2);
         double[] squareVector = square(subtractVector);
         return sum(squareVector);
