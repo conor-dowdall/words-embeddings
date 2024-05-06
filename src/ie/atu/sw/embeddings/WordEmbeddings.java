@@ -37,12 +37,12 @@ public class WordEmbeddings {
         getWordsAndEmbeddingsFromFile();
     }
 
-    public int getWordIndex(String word) {
+    public int getWordIndex(String word) throws Exception {
         for (int i = 0; i < this.numberOfWords; i++)
             if (this.words[i].equals(word))
                 return i;
 
-        return -1;
+        throw new Exception("Cannot find word: '" + word + "'");
     }
 
     public double[] add(String word1, String word2) throws Exception {
@@ -80,10 +80,6 @@ public class WordEmbeddings {
 
     public String[] getWords(String word, int howMany, boolean similar) throws Exception {
         int wordIndex = getWordIndex(word);
-
-        if (wordIndex == -1)
-            throw new Exception("Cannot find the word '" + word + "'");
-
         double[] embedding = this.embeddings[wordIndex];
         return getWords(embedding, howMany, similar);
     }
@@ -92,7 +88,7 @@ public class WordEmbeddings {
         double[] similarityRankings = new double[this.numberOfWords];
 
         for (int i = 0; i < this.numberOfWords; i++)
-            similarityRankings[i] = Vector.euclideanDistance(
+            similarityRankings[i] = Vector.cosineDistance(
                     embedding,
                     this.embeddings[i]);
 
