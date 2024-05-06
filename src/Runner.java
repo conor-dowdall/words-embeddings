@@ -1,16 +1,45 @@
-import ie.atu.sw.embeddings.WordEmbeddings;
+import ie.atu.sw.embeddings.WordsEmbeddings;
+import ie.atu.sw.util.SimilarityAlgorithm;
 
 public class Runner {
     public static void main(String[] args) throws Exception {
-        WordEmbeddings wordEmbeddings = new WordEmbeddings();
+        // WordsEmbeddings wordsEmbeddings = new WordsEmbeddings(
+        // "words-embeddings-reduced.txt");
+        WordsEmbeddings wordsEmbeddings = new WordsEmbeddings();
 
-        double[] search = wordEmbeddings.add("woman", wordEmbeddings.subtract("king",
-                "man"));
+        // String search = "test";
 
-        System.out.println("\n\nSimilar\n-------------");
-        // changed to cosine distance, which has reversed word rankings!
-        String[] similarWords = wordEmbeddings.getDissimilarWords(search, 10);
-        for (String word : similarWords)
-            System.out.println(word);
+        // double[] search = wordsEmbeddings.add("bug", "life");
+
+        double[] search = wordsEmbeddings.multiply("woman", "power");
+
+        // double[] search = wordsEmbeddings.add("woman",
+        // wordsEmbeddings.subtract("king",
+        // "man"));
+
+        int howMany = 10;
+
+        wordsEmbeddings.setSimilarityAlgorithm(SimilarityAlgorithm.DOT_PRODUCT);
+        String[] dotStrings = wordsEmbeddings.getSimilarWords(search, howMany);
+
+        wordsEmbeddings.setSimilarityAlgorithm(SimilarityAlgorithm.EUCLIDEAN_DISTANCE_NO_SQRT);
+        String[] euclidXStrings = wordsEmbeddings.getSimilarWords(search, howMany);
+
+        wordsEmbeddings.setSimilarityAlgorithm(SimilarityAlgorithm.EUCLIDEAN_DISTANCE);
+        String[] euclidStrings = wordsEmbeddings.getSimilarWords(search, howMany);
+
+        wordsEmbeddings.setSimilarityAlgorithm(SimilarityAlgorithm.COSINE_DISTANCE);
+        String[] cosStrings = wordsEmbeddings.getSimilarWords(search, howMany);
+
+        System.out.println("Similar Words");
+        System.out.printf("%20s %20s %20s %20s\n", "DOT", "EUCLIDX", "EUCLID", "COSINE");
+        System.out.printf("%20s %20s %20s %20s\n", "---", "-------", "------", "------");
+        for (int i = 0; i < howMany; i++) {
+            System.out.printf("%20s %20s %20s %20s\n",
+                    dotStrings[i],
+                    euclidXStrings[i],
+                    euclidStrings[i],
+                    cosStrings[i]);
+        }
     }
 }

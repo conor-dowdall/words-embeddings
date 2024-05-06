@@ -11,8 +11,7 @@ public class Array {
         double[] arrayCopy = new double[array.length];
         System.arraycopy(array, 0, arrayCopy, 0, array.length);
 
-        maxValuesIndexes[0] = getMaxValueIndex(arrayCopy);
-        for (int i = 1; i < maxValuesIndexes.length; i++)
+        for (int i = 0; i < maxValuesIndexes.length; i++)
             maxValuesIndexes[i] = getMaxValueIndex(arrayCopy);
 
         return maxValuesIndexes;
@@ -40,8 +39,7 @@ public class Array {
         double[] arrayCopy = new double[array.length];
         System.arraycopy(array, 0, arrayCopy, 0, array.length);
 
-        minValuesIndexes[0] = getMinValueIndex(arrayCopy);
-        for (int i = 1; i < minValuesIndexes.length; i++)
+        for (int i = 0; i < minValuesIndexes.length; i++)
             minValuesIndexes[i] = getMinValueIndex(arrayCopy);
 
         return minValuesIndexes;
