@@ -10,22 +10,22 @@ import java.nio.file.Paths;
 import java.util.stream.Stream;
 
 import ie.atu.sw.console.ConsoleColour;
-import ie.atu.sw.console.ConsoleInputOutput;
+import ie.atu.sw.console.ConsoleProgressMeter;
 import ie.atu.sw.util.Array;
 import ie.atu.sw.util.SimilarityAlgorithm;
 import ie.atu.sw.util.Vector;
 
 public class WordsEmbeddings {
 
-    String fileName;
+    private String fileName;
 
-    String[] words;
-    int numberOfWords;
+    private String[] words;
+    private int numberOfWords;
 
-    double[][] embeddings;
-    int numberOfFeatures;
+    private double[][] embeddings;
+    private int numberOfFeatures;
 
-    SimilarityAlgorithm similarityAlgorithm;
+    private SimilarityAlgorithm similarityAlgorithm;
 
     public WordsEmbeddings() throws Exception {
         this(getDefaultWordEmbeddingsFileName());
@@ -233,7 +233,7 @@ public class WordsEmbeddings {
 
         for (int i = 0; i < getNumberOfWords(); i++) {
             setWordAndEmbeddingsValues(embeddingsFileLine, i);
-            ConsoleInputOutput.printProgress(i, getNumberOfWords() - 1);
+            ConsoleProgressMeter.printProgress(i, getNumberOfWords() - 1);
             embeddingsFileLine = buffer.readLine();
         }
     }

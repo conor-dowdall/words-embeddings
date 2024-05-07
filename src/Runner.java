@@ -1,45 +1,56 @@
-import ie.atu.sw.embeddings.WordsEmbeddings;
-import ie.atu.sw.util.SimilarityAlgorithm;
+
+// import ie.atu.sw.embeddings.WordsEmbeddings;
+// import ie.atu.sw.util.SimilarityAlgorithm;
+import ie.atu.sw.menu.MainMenu;
 
 public class Runner {
     public static void main(String[] args) throws Exception {
-        // WordsEmbeddings wordsEmbeddings = new WordsEmbeddings(
-        // "words-embeddings-reduced.txt");
-        WordsEmbeddings wordsEmbeddings = new WordsEmbeddings();
+        MainMenu mainMenu = new MainMenu();
+        mainMenu.run();
 
-        // String search = "test";
+        // for (MainMenuItem item : MainMenuItem.values()) {
+        // System.out.println(item);
+        // }
 
-        // double[] search = wordsEmbeddings.add("bug", "life");
+        // // WordsEmbeddings wordsEmbeddings = new WordsEmbeddings(
+        // // "words-embeddings-reduced.txt");
+        // WordsEmbeddings wordsEmbeddings = new WordsEmbeddings();
 
-        double[] search = wordsEmbeddings.multiply("woman", "power");
+        // // String search = "test";
 
-        // double[] search = wordsEmbeddings.add("woman",
-        // wordsEmbeddings.subtract("king",
-        // "man"));
+        // // double[] search = wordsEmbeddings.add("bug", "life");
 
-        int howMany = 10;
+        // double[] search = wordsEmbeddings.multiply("woman", "power");
 
-        wordsEmbeddings.setSimilarityAlgorithm(SimilarityAlgorithm.DOT_PRODUCT);
-        String[] dotStrings = wordsEmbeddings.getSimilarWords(search, howMany);
+        // // double[] search = wordsEmbeddings.add("woman",
+        // // wordsEmbeddings.subtract("king",
+        // // "man"));
 
-        wordsEmbeddings.setSimilarityAlgorithm(SimilarityAlgorithm.EUCLIDEAN_DISTANCE_NO_SQRT);
-        String[] euclidXStrings = wordsEmbeddings.getSimilarWords(search, howMany);
+        // int howMany = 10;
 
-        wordsEmbeddings.setSimilarityAlgorithm(SimilarityAlgorithm.EUCLIDEAN_DISTANCE);
-        String[] euclidStrings = wordsEmbeddings.getSimilarWords(search, howMany);
+        // wordsEmbeddings.setSimilarityAlgorithm(SimilarityAlgorithm.DOT_PRODUCT);
+        // String[] dotStrings = wordsEmbeddings.getSimilarWords(search, howMany);
 
-        wordsEmbeddings.setSimilarityAlgorithm(SimilarityAlgorithm.COSINE_DISTANCE);
-        String[] cosStrings = wordsEmbeddings.getSimilarWords(search, howMany);
+        // wordsEmbeddings.setSimilarityAlgorithm(SimilarityAlgorithm.EUCLIDEAN_DISTANCE_NO_SQRT);
+        // String[] euclidXStrings = wordsEmbeddings.getSimilarWords(search, howMany);
 
-        System.out.println("Similar Words");
-        System.out.printf("%20s %20s %20s %20s\n", "DOT", "EUCLIDX", "EUCLID", "COSINE");
-        System.out.printf("%20s %20s %20s %20s\n", "---", "-------", "------", "------");
-        for (int i = 0; i < howMany; i++) {
-            System.out.printf("%20s %20s %20s %20s\n",
-                    dotStrings[i],
-                    euclidXStrings[i],
-                    euclidStrings[i],
-                    cosStrings[i]);
-        }
+        // wordsEmbeddings.setSimilarityAlgorithm(SimilarityAlgorithm.EUCLIDEAN_DISTANCE);
+        // String[] euclidStrings = wordsEmbeddings.getSimilarWords(search, howMany);
+
+        // wordsEmbeddings.setSimilarityAlgorithm(SimilarityAlgorithm.COSINE_DISTANCE);
+        // String[] cosStrings = wordsEmbeddings.getSimilarWords(search, howMany);
+
+        // System.out.println("Similar Words");
+        // System.out.printf("%20s %20s %20s %20s\n", "DOT", "EUCLIDX", "EUCLID",
+        // "COSINE");
+        // System.out.printf("%20s %20s %20s %20s\n", "---", "-------", "------",
+        // "------");
+        // for (int i = 0; i < howMany; i++) {
+        // System.out.printf("%20s %20s %20s %20s\n",
+        // dotStrings[i],
+        // euclidXStrings[i],
+        // euclidStrings[i],
+        // cosStrings[i]);
+        // }
     }
 }
