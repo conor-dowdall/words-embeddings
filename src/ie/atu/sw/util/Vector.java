@@ -60,7 +60,7 @@ public class Vector {
     }
 
     public static double sum(double[] vector) {
-        double vectorSum = 0;
+        double vectorSum = 0.0;
         for (double d : vector)
             vectorSum += d;
 
@@ -76,7 +76,7 @@ public class Vector {
     }
 
     public static double euclideanDistance(double[] vector1, double[] vector2) throws Exception {
-        return Math.sqrt(sum(square(subtract(vector1, vector2))));
+        return Math.sqrt(euclideanDistanceNoSqrt(vector1, vector2));
     }
 
     public static double cosineDistance(double[] vector1, double[] vector2) throws Exception {
