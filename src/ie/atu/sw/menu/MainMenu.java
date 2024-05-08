@@ -6,83 +6,142 @@ import ie.atu.sw.console.ConsoleColour;
 import ie.atu.sw.embeddings.WordsEmbeddings;
 
 public class MainMenu {
-    Scanner scanner = new Scanner(System.in);
+    private Scanner inputScanner = new Scanner(System.in);
 
-    WordsEmbeddings wordsEmbeddings;
-    String outputFileName = "./out.txt";
+    private WordsEmbeddings wordsEmbeddings;
+    private String outputFileName = "./out.txt";
 
-    public WordsEmbeddings getWordsEmbeddings() {
-        return wordsEmbeddings;
-    }
-
-    public void setWordsEmbeddings(WordsEmbeddings wordsEmbeddings) {
-        this.wordsEmbeddings = wordsEmbeddings;
-    }
-
-    public String getOutputFileName() {
-        return outputFileName;
-    }
-
-    public void setOutputFileName(String outputFileName) {
-        this.outputFileName = outputFileName;
-    }
-
-    public void run() {
+    public MainMenu() {
         MainMenuItem.printHeader();
         printOptionsAndProcessInput();
     }
 
-    public void printOptionsAndProcessInput() {
-        MainMenuItem.printOptions();
-        String input = scanner.nextLine();
+    private WordsEmbeddings getWordsEmbeddings() {
+        return wordsEmbeddings;
+    }
 
+    private void setWordsEmbeddings(WordsEmbeddings wordsEmbeddings) {
+        this.wordsEmbeddings = wordsEmbeddings;
+    }
+
+    private String getOutputFileName() {
+        return outputFileName;
+    }
+
+    private void setOutputFileName(String outputFileName) {
+        this.outputFileName = outputFileName;
+    }
+
+    private void printOptionsAndProcessInput() {
         try {
-            MainMenuItem item = MainMenuItem.valueOfKey(input);
-            switch (item) {
-                case EMBEDDINGS_FILE:
-                    loadNewWordEmbeddings();
-                    printOptionsAndProcessInput();
-                    break;
-                case OUTPUT_FILE:
-                    loadNewOutputFile();
-                    printOptionsAndProcessInput();
-                    break;
-                case SIMILAR_WORDS:
-                    break;
-                case SETTINGS:
-                    break;
-                case QUIT:
-                    scanner.close();
-                    System.out.println("Exit\n");
-                    break;
-                default:
-                    break;
 
+            System.out.println();
+            MainMenuItem.printOptions();
+
+            String input = this.inputScanner.nextLine();
+            MainMenuItem item = MainMenuItem.valueOfKey(input);
+
+            switch (item) {
+                case EMBEDDINGS_FILE -> loadNewWordEmbeddings();
+                case OUTPUT_FILE -> specifyNewOutputFile();
+                case SIMILAR_WORDS -> launchSimilarWords();
+                case DISSIMILAR_WORDS -> launchDissimilarWords();
+                case WORD_CALCULATOR -> launchWordCalculator();
+                case SETTINGS -> launchSettings();
+                case QUIT -> quitProgram();
+                default -> throw new Exception("This should never happen!");
             }
+
         } catch (Exception e) {
-            System.err.println();
-            System.err.print(ConsoleColour.BLACK_BACKGROUND);
-            System.err.print(ConsoleColour.RED_BOLD_BRIGHT);
-            System.err.print("ERROR " + e);
-            System.err.println(ConsoleColour.RESET);
-            printOptionsAndProcessInput();
+            printError(e);
         }
+
+        printOptionsAndProcessInput();
+    }
+
+    private void printError(Exception e) {
+        System.err.println();
+        System.err.print(ConsoleColour.BLACK_BACKGROUND);
+        System.err.print(ConsoleColour.RED_BOLD_BRIGHT);
+        System.err.print("[ERROR] " + e);
+        System.err.print(ConsoleColour.RESET);
+        System.err.println();
+    }
+
+    private String scanFileName() throws Exception {
+        System.out.print("Enter file name: ");
+        String fileName = this.inputScanner.nextLine();
+
+        if (fileName.equals(""))
+            throw new Exception("No file name provided");
+
+        return fileName;
+    }
+
+    private void printWithUnderline(String text) {
+        System.out.print(ConsoleColour.BLACK_BACKGROUND);
+        System.out.print(ConsoleColour.WHITE_UNDERLINED);
+        System.out.print(text);
+        System.out.print(ConsoleColour.RESET);
+    }
+
+    private void printHeading(String heading) {
+        System.out.println();
+        printWithUnderline(heading);
+        System.out.println();
     }
 
     private void loadNewWordEmbeddings() throws Exception {
-        String fileName = scanFileName();
-        setWordsEmbeddings(new WordsEmbeddings(fileName));
+        printHeading("Load Word-Embeddings File");
+
+        String wordEmbeddingsFileName = scanFileName();
+
+        setWordsEmbeddings(new WordsEmbeddings(wordEmbeddingsFileName));
     }
 
-    private void loadNewOutputFile() {
-        this.outputFileName = scanFileName();
-        System.out.println("You entered: " + this.outputFileName);
+    private void specifyNewOutputFile() throws Exception {
+        printHeading("Specify Output-Data File");
+
+        setOutputFileName(scanFileName());
+
+        System.out.println("You entered: " + getOutputFileName());
     }
 
-    private String scanFileName() {
+    private void launchSimilarWords() throws Exception {
+        if (wordsEmbeddings == null)
+            loadNewWordEmbeddings();
+
         System.out.println();
-        System.out.println("Enter file name:");
-        String fileName = scanner.nextLine();
-        return fileName;
+        System.out.print("Enter word(s): ");
+        String input = this.inputScanner.nextLine();
+        String[] words = input.split(" ");
+        for (String word : words) {
+            try {
+                String[] similarWords = getWordsEmbeddings().getSimilarWords(word, 10);
+                printHeading("Words Similar To '" + word + "'");
+                for (String similarWord : similarWords)
+                    System.out.println(similarWord);
+            } catch (Exception e) {
+                printError(e);
+            }
+        }
+    }
+
+    private void launchDissimilarWords() {
+    }
+
+    private void launchWordCalculator() {
+    }
+
+    private void launchSettings() {
+
+    }
+
+    private void quitProgram() {
+        this.inputScanner.close();
+        System.out.println();
+        System.out.println("Quit");
+        System.out.println();
+        System.exit(0);
     }
 }
