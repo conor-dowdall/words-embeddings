@@ -4,23 +4,25 @@ import ie.atu.sw.console.ConsoleColour;
 
 public enum MainMenuItem {
 
-    EMBEDDINGS_FILE("1", "Specify Embeddings File"),
-    OUTPUT_FILE("2", "Change Output File (default = ./out.txt)"),
-    SIMILAR_WORDS("3", "Find Similar Words"),
-    SETTINGS("4", "Settings"),
-    QUIT("Q", "Quit");
+    EMBEDDINGS_FILE("Load Word-Embeddings File", null),
+    OUTPUT_FILE("Specify Data-Output File (default = ./out.txt)", null),
+    SIMILAR_WORDS("Launch 'Similar Words'", null),
+    DISSIMILAR_WORDS("Launch 'Dissimilar Words'", null),
+    WORD_CALCULATOR("Launch 'Word Calculator'", null),
+    SETTINGS("Settings", null),
+    QUIT("Quit", "q");
 
     public final String key;
     public final String title;
 
-    private MainMenuItem(String key, String title) {
-        this.key = key;
+    private MainMenuItem(String title, String key) {
         this.title = title;
+        this.key = key != null ? key : String.valueOf(this.ordinal() + 1);
     }
 
     public static MainMenuItem valueOfKey(String key) throws Exception {
         for (MainMenuItem item : MainMenuItem.values())
-            if (item.key.equals(key.toUpperCase()))
+            if (item.key.equals(key.toLowerCase()))
                 return item;
 
         throw new Exception("'" + key + "' is not a valid menu option.");
@@ -43,14 +45,14 @@ public enum MainMenuItem {
         System.out.println("*                      ID: 10024983                        *");
         System.out.println("*                                                          *");
         System.out.print("************************************************************");
-        System.out.println(ConsoleColour.RESET);
+        System.out.print(ConsoleColour.RESET);
+        System.out.println();
     }
 
     public static void printOptions() {
         System.out.print(ConsoleColour.BLACK_BACKGROUND);
         System.out.print(ConsoleColour.GREEN_BOLD_BRIGHT);
-        System.out.println();
-        System.out.println("Please select from the following options:");
+        System.out.print("Please select from the following options:");
         System.out.println();
 
         for (MainMenuItem item : MainMenuItem.values())
