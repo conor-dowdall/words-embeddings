@@ -25,7 +25,7 @@ public class WordsEmbeddings {
     private double[][] embeddings;
     private int numberOfFeatures;
 
-    private SimilarityAlgorithm similarityAlgorithm;
+    private SimilarityAlgorithm similarityAlgorithm = SimilarityAlgorithm.COSINE_DISTANCE;
 
     public WordsEmbeddings() throws Exception {
         this(getDefaultWordEmbeddingsFileName());
@@ -33,8 +33,6 @@ public class WordsEmbeddings {
 
     public WordsEmbeddings(String fileName) throws Exception {
         setFileName(fileName);
-        setWordsAndEmbeddings();
-        setSimilarityAlgorithm(SimilarityAlgorithm.COSINE_DISTANCE);
     }
 
     private static String getDefaultWordEmbeddingsFileName() {
@@ -46,8 +44,9 @@ public class WordsEmbeddings {
         return fileName;
     }
 
-    private void setFileName(String fileName) {
+    private void setFileName(String fileName) throws Exception {
         this.fileName = fileName;
+        setWordsAndEmbeddings();
     }
 
     public String[] getWords() {
