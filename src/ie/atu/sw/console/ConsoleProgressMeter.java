@@ -65,6 +65,6 @@ public class ConsoleProgressMeter {
 
         // Once the meter reaches its max, move to a new line.
         if (index == total)
-            System.out.println(ConsoleColour.RESET + "\n");
+            System.out.println(ConsoleColour.RESET);
     }
 }
