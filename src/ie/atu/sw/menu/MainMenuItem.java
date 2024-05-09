@@ -6,8 +6,8 @@ public enum MainMenuItem {
 
     EMBEDDINGS_FILE("Load Word-Embeddings File", null),
     OUTPUT_FILE("Specify Data-Output File (default = ./out.txt)", null),
-    SIMILAR_WORDS("Launch 'Similar Words'", null),
-    DISSIMILAR_WORDS("Launch 'Dissimilar Words'", null),
+    SIMILAR_WORDS("Launch 'Find Similar Words'", null),
+    DISSIMILAR_WORDS("Launch 'Find Dissimilar Words'", null),
     WORD_CALCULATOR("Launch 'Word Calculator'", null),
     SETTINGS("Settings", null),
     QUIT("Quit", "q");
