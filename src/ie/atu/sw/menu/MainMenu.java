@@ -95,12 +95,17 @@ public class MainMenu {
         System.out.println("You entered: " + this.outputFileName);
     }
 
-    private void launchSimilarWords() throws Exception {
+    private void launchSimilarWords(boolean similar) throws Exception {
         if (this.wordsEmbeddings == null)
             loadNewWordEmbeddings();
 
-        printHeading("Find Similar Words");
+        if (similar)
+            printHeading("Find Similar Words");
+        else
+            printHeading("Find Disimilar Words");
+
         System.out.println("Using Embeddings File: " + wordsEmbeddings.getFileName());
+
         System.out.println();
         System.out.print("Enter word(s): ");
 
@@ -110,8 +115,12 @@ public class MainMenu {
         for (String word : words) {
             try {
 
-                String[] similarWords = this.wordsEmbeddings.getSimilarWords(word, 10);
-                printHeading("Words Similar To '" + word + "'");
+                String[] similarWords = this.wordsEmbeddings.getSimilarWords(word, 10, similar);
+
+                if (similar)
+                    printHeading("Words Similar To '" + word + "'");
+                else
+                    printHeading("Words Dissimilar To '" + word + "'");
 
                 for (String similarWord : similarWords)
                     System.out.println(similarWord);
@@ -122,7 +131,12 @@ public class MainMenu {
         }
     }
 
-    private void launchDissimilarWords() {
+    private void launchSimilarWords() throws Exception {
+        launchSimilarWords(true);
+    }
+
+    private void launchDissimilarWords() throws Exception {
+        launchSimilarWords(false);
     }
 
     private void launchWordCalculator() {
