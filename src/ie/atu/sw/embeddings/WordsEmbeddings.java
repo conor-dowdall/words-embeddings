@@ -53,32 +53,16 @@ public class WordsEmbeddings {
         return words;
     }
 
-    private void setWords(String[] words) {
-        this.words = words;
-    }
-
     public int getNumberOfWords() {
         return numberOfWords;
-    }
-
-    private void setNumberOfWords(int numberOfWords) {
-        this.numberOfWords = numberOfWords;
     }
 
     public double[][] getEmbeddings() {
         return embeddings;
     }
 
-    private void setEmbeddings(double[][] embeddings) {
-        this.embeddings = embeddings;
-    }
-
     public int getNumberOfFeatures() {
         return numberOfFeatures;
-    }
-
-    private void setNumberOfFeatures(int numberOfFeatures) {
-        this.numberOfFeatures = numberOfFeatures;
     }
 
     public SimilarityAlgorithm getSimilarityAlgorithm() {
@@ -90,8 +74,8 @@ public class WordsEmbeddings {
     }
 
     public int getWordIndex(String word) throws Exception {
-        for (int i = 0; i < getNumberOfWords(); i++)
-            if (getWords()[i].equals(word))
+        for (int i = 0; i < this.numberOfWords; i++)
+            if (this.words[i].equals(word))
                 return i;
 
         throw new Exception("Cannot find word: '" + word + "'");
@@ -100,17 +84,17 @@ public class WordsEmbeddings {
     public double[] add(String word1, String word2) throws Exception {
         int wordIndex1 = getWordIndex(word1);
         int wordIndex2 = getWordIndex(word2);
-        return Vector.add(getEmbeddings()[wordIndex1], getEmbeddings()[wordIndex2]);
+        return Vector.add(this.embeddings[wordIndex1], this.embeddings[wordIndex2]);
     }
 
     public double[] add(String word, double[] embedding) throws Exception {
         int wordIndex = getWordIndex(word);
-        return Vector.add(getEmbeddings()[wordIndex], embedding);
+        return Vector.add(this.embeddings[wordIndex], embedding);
     }
 
     public double[] add(double[] embedding, String word) throws Exception {
         int wordIndex = getWordIndex(word);
-        return Vector.add(embedding, getEmbeddings()[wordIndex]);
+        return Vector.add(embedding, this.embeddings[wordIndex]);
     }
 
     public double[] add(double[] embedding1, double[] embedding2) throws Exception {
@@ -120,17 +104,17 @@ public class WordsEmbeddings {
     public double[] subtract(String word1, String word2) throws Exception {
         int wordIndex1 = getWordIndex(word1);
         int wordIndex2 = getWordIndex(word2);
-        return Vector.subtract(getEmbeddings()[wordIndex1], getEmbeddings()[wordIndex2]);
+        return Vector.subtract(this.embeddings[wordIndex1], this.embeddings[wordIndex2]);
     }
 
     public double[] subtract(String word, double[] embedding) throws Exception {
         int wordIndex = getWordIndex(word);
-        return Vector.subtract(getEmbeddings()[wordIndex], embedding);
+        return Vector.subtract(this.embeddings[wordIndex], embedding);
     }
 
     public double[] subtract(double[] embedding, String word) throws Exception {
         int wordIndex = getWordIndex(word);
-        return Vector.subtract(embedding, getEmbeddings()[wordIndex]);
+        return Vector.subtract(embedding, this.embeddings[wordIndex]);
     }
 
     public double[] subtract(double[] embedding1, double[] embedding2) throws Exception {
@@ -140,17 +124,17 @@ public class WordsEmbeddings {
     public double[] multiply(String word1, String word2) throws Exception {
         int wordIndex1 = getWordIndex(word1);
         int wordIndex2 = getWordIndex(word2);
-        return Vector.multiply(getEmbeddings()[wordIndex1], getEmbeddings()[wordIndex2]);
+        return Vector.multiply(this.embeddings[wordIndex1], this.embeddings[wordIndex2]);
     }
 
     public double[] multiply(String word, double[] embedding) throws Exception {
         int wordIndex = getWordIndex(word);
-        return Vector.multiply(getEmbeddings()[wordIndex], embedding);
+        return Vector.multiply(this.embeddings[wordIndex], embedding);
     }
 
     public double[] multiply(double[] embedding, String word) throws Exception {
         int wordIndex = getWordIndex(word);
-        return Vector.multiply(embedding, getEmbeddings()[wordIndex]);
+        return Vector.multiply(embedding, this.embeddings[wordIndex]);
     }
 
     public double[] multiply(double[] embedding1, double[] embedding2) throws Exception {
@@ -175,41 +159,41 @@ public class WordsEmbeddings {
 
     public String[] getSimilarWords(String word, int howMany, boolean similar) throws Exception {
         int wordIndex = getWordIndex(word);
-        double[] embedding = getEmbeddings()[wordIndex];
+        double[] embedding = this.embeddings[wordIndex];
         return getSimilarWords(embedding, howMany, similar);
     }
 
     public String[] getSimilarWords(double[] embedding, int howMany, boolean similar) throws Exception {
-        double[] similarityRankings = new double[getNumberOfWords()];
+        double[] similarityRankings = new double[this.numberOfWords];
 
-        for (int i = 0; i < getNumberOfWords(); i++)
-            similarityRankings[i] = getSimilarityAlgorithm().calculate(embedding, getEmbeddings()[i]);
+        for (int i = 0; i < this.numberOfWords; i++)
+            similarityRankings[i] = this.similarityAlgorithm.calculate(embedding, this.embeddings[i]);
 
-        boolean useMinimums = (getSimilarityAlgorithm() == SimilarityAlgorithm.COSINE_DISTANCE
-                || getSimilarityAlgorithm() == SimilarityAlgorithm.DOT_PRODUCT) ? !similar : similar;
+        boolean useMinimums = (this.similarityAlgorithm == SimilarityAlgorithm.COSINE_DISTANCE
+                || this.similarityAlgorithm == SimilarityAlgorithm.DOT_PRODUCT) ? !similar : similar;
 
         int[] wordIndexes = useMinimums ? Array.getMinValuesIndexes(similarityRankings, howMany)
                 : Array.getMaxValuesIndexes(similarityRankings, howMany);
 
         String[] words = new String[wordIndexes.length];
         for (int i = 0; i < wordIndexes.length; i++)
-            words[i] = getWords()[wordIndexes[i]];
+            words[i] = this.words[wordIndexes[i]];
 
         return words;
     }
 
     public void setWordsAndEmbeddings() throws Exception {
-        setNumberOfWords((int) countFileLines());
-        setWords(new String[getNumberOfWords()]);
+        this.numberOfWords = (int) countFileLines();
+        this.words = new String[this.numberOfWords];
 
-        try (BufferedReader buffer = new BufferedReader(new FileReader(getFileName()))) {
+        try (BufferedReader buffer = new BufferedReader(new FileReader(this.fileName))) {
             readBufferLinesData(buffer);
             buffer.close();
         }
     }
 
     private long countFileLines() throws Exception {
-        Path path = Paths.get(getFileName());
+        Path path = Paths.get(this.fileName);
 
         try (Stream<String> stream = Files.lines(path, StandardCharsets.UTF_8)) {
             long numberOfWords = stream.count();
@@ -225,14 +209,14 @@ public class WordsEmbeddings {
     private void readBufferLinesData(BufferedReader buffer) throws Exception {
         String embeddingsFileLine = buffer.readLine();
 
-        setNumberOfFeatures(countEmbeddingsFeatures(embeddingsFileLine));
-        setEmbeddings(new double[getNumberOfWords()][getNumberOfFeatures()]);
+        this.numberOfFeatures = countEmbeddingsFeatures(embeddingsFileLine);
+        this.embeddings = new double[this.numberOfWords][getNumberOfFeatures()];
 
         printFileLoadingHeader();
 
-        for (int i = 0; i < getNumberOfWords(); i++) {
+        for (int i = 0; i < this.numberOfWords; i++) {
             setWordAndEmbeddingsValues(embeddingsFileLine, i);
-            ConsoleProgressMeter.printProgress(i, getNumberOfWords() - 1);
+            ConsoleProgressMeter.printProgress(i, this.numberOfWords - 1);
             embeddingsFileLine = buffer.readLine();
         }
     }
@@ -249,24 +233,24 @@ public class WordsEmbeddings {
 
     private void printFileLoadingHeader() {
         System.out.println();
-        System.out.println("Loading embeddings from:\t" + getFileName());
-        System.out.println("#words:\t\t\t\t" + getNumberOfWords());
-        System.out.println("#features/word:\t\t\t" + getNumberOfFeatures());
+        System.out.println("Loading Embeddings From:\t" + this.fileName);
+        System.out.println("#Words:\t\t\t\t" + this.numberOfWords);
+        System.out.println("#Features/Word:\t\t\t" + this.numberOfFeatures);
     }
 
     private void setWordAndEmbeddingsValues(String embeddingsFileLine, int lineNumber) throws Exception {
         String[] wordAndEmbeddings = embeddingsFileLine.split(", ");
 
-        if (wordAndEmbeddings.length != getNumberOfFeatures() + 1) {
+        if (wordAndEmbeddings.length != this.numberOfFeatures + 1) {
             System.out.println(ConsoleColour.RESET + "\n");
             throw new Exception(
-                    "Line #" + (lineNumber + 1) + " in " + getFileName() + " has a different format.");
+                    "Line #" + (lineNumber + 1) + " in " + this.fileName + " has a different format.");
         }
 
-        getWords()[lineNumber] = wordAndEmbeddings[0];
+        this.words[lineNumber] = wordAndEmbeddings[0];
 
-        for (int i = 0; i < getNumberOfFeatures(); i++)
-            getEmbeddings()[lineNumber][i] = Double.parseDouble(wordAndEmbeddings[i + 1]);
+        for (int i = 0; i < this.numberOfFeatures; i++)
+            this.embeddings[lineNumber][i] = Double.parseDouble(wordAndEmbeddings[i + 1]);
     }
 
 }
