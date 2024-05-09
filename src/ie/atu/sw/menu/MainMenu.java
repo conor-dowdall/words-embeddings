@@ -1,5 +1,6 @@
 package ie.atu.sw.menu;
 
+import java.nio.file.NoSuchFileException;
 import java.util.Scanner;
 
 import ie.atu.sw.console.ConsoleColour;
@@ -14,22 +15,6 @@ public class MainMenu {
     public MainMenu() {
         MainMenuItem.printHeader();
         printOptionsAndProcessInput();
-    }
-
-    private WordsEmbeddings getWordsEmbeddings() {
-        return wordsEmbeddings;
-    }
-
-    private void setWordsEmbeddings(WordsEmbeddings wordsEmbeddings) {
-        this.wordsEmbeddings = wordsEmbeddings;
-    }
-
-    private String getOutputFileName() {
-        return outputFileName;
-    }
-
-    private void setOutputFileName(String outputFileName) {
-        this.outputFileName = outputFileName;
     }
 
     private void printOptionsAndProcessInput() {
@@ -52,18 +37,21 @@ public class MainMenu {
                 default -> throw new Exception("This should never happen!");
             }
 
+        } catch (NoSuchFileException e) {
+            printError("File not found: '" + e.getMessage() + "'");
         } catch (Exception e) {
-            printError(e);
+            printError(e.getMessage());
+        } finally {
+            printOptionsAndProcessInput();
         }
 
-        printOptionsAndProcessInput();
     }
 
-    private void printError(Exception e) {
+    private void printError(String error) {
         System.err.println();
         System.err.print(ConsoleColour.BLACK_BACKGROUND);
         System.err.print(ConsoleColour.RED_BOLD_BRIGHT);
-        System.err.print("[ERROR] " + e);
+        System.err.print("[ERROR] " + error);
         System.err.print(ConsoleColour.RESET);
         System.err.println();
     }
@@ -96,33 +84,40 @@ public class MainMenu {
 
         String wordEmbeddingsFileName = scanFileName();
 
-        setWordsEmbeddings(new WordsEmbeddings(wordEmbeddingsFileName));
+        this.wordsEmbeddings = new WordsEmbeddings(wordEmbeddingsFileName);
     }
 
     private void specifyNewOutputFile() throws Exception {
         printHeading("Specify Output-Data File");
 
-        setOutputFileName(scanFileName());
+        this.outputFileName = scanFileName();
 
-        System.out.println("You entered: " + getOutputFileName());
+        System.out.println("You entered: " + this.outputFileName);
     }
 
     private void launchSimilarWords() throws Exception {
-        if (wordsEmbeddings == null)
+        if (this.wordsEmbeddings == null)
             loadNewWordEmbeddings();
 
+        printHeading("Find Similar Words");
+        System.out.println("Using Embeddings File: " + wordsEmbeddings.getFileName());
         System.out.println();
         System.out.print("Enter word(s): ");
+
         String input = this.inputScanner.nextLine();
         String[] words = input.split(" ");
+
         for (String word : words) {
             try {
-                String[] similarWords = getWordsEmbeddings().getSimilarWords(word, 10);
+
+                String[] similarWords = this.wordsEmbeddings.getSimilarWords(word, 10);
                 printHeading("Words Similar To '" + word + "'");
+
                 for (String similarWord : similarWords)
                     System.out.println(similarWord);
+
             } catch (Exception e) {
-                printError(e);
+                printError(e.getMessage());
             }
         }
     }
