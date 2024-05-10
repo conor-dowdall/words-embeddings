@@ -1,5 +1,8 @@
 package ie.atu.sw.menu;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.nio.file.NoSuchFileException;
 import java.util.Scanner;
 
@@ -13,12 +16,12 @@ public class MainMenu {
         this.settingsMenu = new SettingsMenu(this.inputScanner);
     }
 
-    public void launchMenu() {
+    public void launchMenu() throws Exception {
         MainMenuItem.printTitle();
         printOptionsAndProcessInput();
     }
 
-    private void printOptionsAndProcessInput() {
+    private void printOptionsAndProcessInput() throws Exception {
         try {
 
             MainMenuItem.printOptions();
@@ -45,25 +48,36 @@ public class MainMenu {
 
     }
 
+    private void launchSimilarWords() throws Exception {
+        launchSimilarWords(true);
+    }
+
+    private void launchDissimilarWords() throws Exception {
+        launchSimilarWords(false);
+    }
+
     private void launchSimilarWords(boolean similar) throws Exception {
         if (settingsMenu.getWordsEmbeddings() == null)
-            settingsMenu.loadNewWordEmbeddings();
+            settingsMenu.loadNewWordsEmbeddingsFile();
 
         if (similar)
-            ConsolePrint.printHeading("Find Similar Words");
+            ConsolePrint.printTitle("Find Similar Words");
         else
-            ConsolePrint.printHeading("Find Dissimilar Words");
+            ConsolePrint.printTitle("Find Dissimilar Words");
 
-        System.out.println("Embeddings File:\t" + settingsMenu.getWordsEmbeddings().getFileName());
-        System.out.println("Number of Similarities:\t" + settingsMenu.getNumberOfSimilaritiesToFind());
-        System.out.println();
+        settingsMenu.printSettings();
 
         System.out.print("Enter word(s): ");
 
         String input = this.inputScanner.nextLine();
         String[] words = input.split(" ");
 
+        File dataOutputFile = new File(settingsMenu.getDataOutputFileName());
+        FileWriter dataOutputFileWriter = new FileWriter(dataOutputFile, settingsMenu.getAppendDataOutputFile());
+        BufferedWriter dataOutputBufferedWriter = new BufferedWriter(dataOutputFileWriter);
+
         for (String word : words) {
+
             try {
 
                 String[] similarWords = this.settingsMenu.getWordsEmbeddings().getSimilarWords(
@@ -71,26 +85,30 @@ public class MainMenu {
                         settingsMenu.getNumberOfSimilaritiesToFind(),
                         similar);
 
-                if (similar)
-                    ConsolePrint.printHeading("Words Similar To '" + word + "'");
-                else
-                    ConsolePrint.printHeading("Words Dissimilar To '" + word + "'");
+                String heading = settingsMenu.getNumberOfSimilaritiesToFind() + " ";
+                heading += similar
+                        ? "Words Similar To '"
+                        : "Words Dissimilar To '";
+                heading += word + "'";
 
-                for (String similarWord : similarWords)
+                ConsolePrint.printHeading(heading);
+                dataOutputBufferedWriter.write(heading);
+                dataOutputBufferedWriter.newLine();
+
+                for (String similarWord : similarWords) {
                     System.out.println(similarWord);
+                    dataOutputBufferedWriter.write(similarWord);
+                    dataOutputBufferedWriter.newLine();
+                }
+                dataOutputBufferedWriter.newLine();
 
             } catch (Exception e) {
                 ConsolePrint.printError(e.getMessage());
             }
+
         }
-    }
 
-    private void launchSimilarWords() throws Exception {
-        launchSimilarWords(true);
-    }
-
-    private void launchDissimilarWords() throws Exception {
-        launchSimilarWords(false);
+        dataOutputBufferedWriter.close();
     }
 
     private void launchWordCalculator() {
@@ -102,8 +120,7 @@ public class MainMenu {
 
     private void quitProgram() {
         this.inputScanner.close();
-        System.out.println();
-        System.out.println("Quit");
+        ConsolePrint.printInfo("Quit");
         System.out.println();
         System.exit(0);
     }
