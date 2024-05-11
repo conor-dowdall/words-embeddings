@@ -95,9 +95,22 @@ public class MainMenu {
                 dataOutputBufferedWriter.write(heading);
                 dataOutputBufferedWriter.newLine();
 
-                for (String similarWord : similarWords) {
-                    System.out.println(similarWord);
-                    dataOutputBufferedWriter.write(similarWord);
+                for (int i = 0; i < similarWords.length; i++) {
+                    String similarWordsCount = (i + 1) + ") ";
+                    System.out.print(similarWordsCount);
+                    dataOutputBufferedWriter.write(similarWordsCount);
+
+                    System.out.print(similarWords[i]);
+                    dataOutputBufferedWriter.write(similarWords[i]);
+
+                    if (settingsMenu.getAddSimilarityScore()) {
+                        String score = " " + Double
+                                .toString(settingsMenu.getWordsEmbeddings().getPreviousSimilarWordsScores()[i]);
+                        System.out.println(score);
+                        dataOutputBufferedWriter.write(score);
+                    }
+
+                    System.out.println();
                     dataOutputBufferedWriter.newLine();
                 }
                 dataOutputBufferedWriter.newLine();

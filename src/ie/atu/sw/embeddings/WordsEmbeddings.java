@@ -25,6 +25,9 @@ public class WordsEmbeddings {
     private double[][] embeddings;
     private int numberOfFeatures;
 
+    private String[] previousSimilarWords;
+    private double[] previousSimilarWordsScores;
+
     private SimilarityAlgorithm similarityAlgorithm = SimilarityAlgorithm.COSINE_DISTANCE;
 
     public WordsEmbeddings() throws Exception {
@@ -71,6 +74,14 @@ public class WordsEmbeddings {
 
     public void setSimilarityAlgorithm(SimilarityAlgorithm similarityAlgorithm) {
         this.similarityAlgorithm = similarityAlgorithm;
+    }
+
+    public String[] getPreviousSimilarWords() {
+        return previousSimilarWords;
+    }
+
+    public double[] getPreviousSimilarWordsScores() {
+        return previousSimilarWordsScores;
     }
 
     public int getWordIndex(String word) throws Exception {
@@ -164,22 +175,34 @@ public class WordsEmbeddings {
     }
 
     public String[] getSimilarWords(double[] embedding, int howMany, boolean similar) throws Exception {
-        double[] similarityRankings = new double[this.numberOfWords];
+        double[] similarityScores = new double[this.numberOfWords];
 
         for (int i = 0; i < this.numberOfWords; i++)
-            similarityRankings[i] = this.similarityAlgorithm.calculate(embedding, this.embeddings[i]);
+            similarityScores[i] = this.similarityAlgorithm.calculate(embedding, this.embeddings[i]);
 
-        boolean useMinimums = (this.similarityAlgorithm == SimilarityAlgorithm.COSINE_DISTANCE
-                || this.similarityAlgorithm == SimilarityAlgorithm.DOT_PRODUCT) ? !similar : similar;
+        boolean usingEuclidean = this.similarityAlgorithm == SimilarityAlgorithm.EUCLIDEAN_DISTANCE
+                || this.similarityAlgorithm == SimilarityAlgorithm.EUCLIDEAN_DISTANCE_NO_SQRT;
 
-        int[] wordIndexes = useMinimums ? Array.getMinValuesIndexes(similarityRankings, howMany)
-                : Array.getMaxValuesIndexes(similarityRankings, howMany);
+        // Euclidean Distances use smallest values for best similarity
+        // and largest for best dissimilarity
+        // Others use opposite
+        boolean useMinimums = usingEuclidean ? similar : !similar;
 
-        String[] words = new String[wordIndexes.length];
-        for (int i = 0; i < wordIndexes.length; i++)
-            words[i] = this.words[wordIndexes[i]];
+        int[] wordIndexes = useMinimums ? Array.getMinValuesIndexes(similarityScores, howMany)
+                : Array.getMaxValuesIndexes(similarityScores, howMany);
 
-        return words;
+        String[] similarWords = new String[wordIndexes.length];
+        double[] similarWordsScores = new double[wordIndexes.length];
+
+        for (int i = 0; i < wordIndexes.length; i++) {
+            similarWords[i] = this.words[wordIndexes[i]];
+            similarWordsScores[i] = similarityScores[wordIndexes[i]];
+        }
+
+        this.previousSimilarWords = similarWords;
+        this.previousSimilarWordsScores = similarWordsScores;
+
+        return similarWords;
     }
 
     public void setWordsAndEmbeddings() throws Exception {

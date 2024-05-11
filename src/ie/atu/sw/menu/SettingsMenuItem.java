@@ -7,7 +7,7 @@ public enum SettingsMenuItem {
     EMBEDDINGS_FILE("Load Word-Embeddings File", null),
     SIMILARITIES_NUMBER("Number of Similarities to Find", null),
     SIMILARITIES_ALGORITHM("Similarity Algorithm to Use", null),
-    ADD_WORD_STATS("Include Word Statistics in Output", null),
+    TOGGLE_SIMILARITY_SCORE("Toggle Similarity Score in Output", null),
     OUTPUT_FILE("Specify Data-Output File", null),
     TOGGLE_APPEND("Toggle Append/Overwrite Data-Output File", null),
     EMPTY_OUTPUT_FILE("Empty the Output File", null),

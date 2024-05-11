@@ -38,6 +38,14 @@ public class SettingsMenu {
         this.preferences.putInt("numberOfSimilaritiesToFind", number);
     }
 
+    public boolean getAddSimilarityScore() {
+        return this.preferences.getBoolean("addSimilarityScore", false);
+    }
+
+    private void setAddSimilarityScore(boolean append) {
+        this.preferences.putBoolean("addSimilarityScore", append);
+    }
+
     public String getDataOutputFileName() {
         return this.preferences.get("dataOutputFileName", "./out.txt");
     }
@@ -67,7 +75,7 @@ public class SettingsMenu {
                 case EMBEDDINGS_FILE -> loadNewWordsEmbeddingsFile();
                 case SIMILARITIES_NUMBER -> specifySimilarities();
                 case SIMILARITIES_ALGORITHM -> System.out.println("TODO");
-                case ADD_WORD_STATS -> System.out.println("TODO");
+                case TOGGLE_SIMILARITY_SCORE -> toggleAddSimilarityScore();
                 case OUTPUT_FILE -> specifyNewDataOutputFileName();
                 case TOGGLE_APPEND -> toggleAppendDataOutputFile();
                 case EMPTY_OUTPUT_FILE -> emptyDataOutputFile();
@@ -143,6 +151,12 @@ public class SettingsMenu {
 
     }
 
+    private void toggleAddSimilarityScore() {
+        setAddSimilarityScore(!getAddSimilarityScore());
+
+        ConsolePrint.printInfo("Similarity algorithm scores will be used in output data");
+    }
+
     private void specifyNewDataOutputFileName() throws Exception {
         ConsolePrint.printHeading("Specify Data-Output File");
 
@@ -196,6 +210,7 @@ public class SettingsMenu {
         ConsolePrint.printInfo("Number of Words to Find: " + getNumberOfSimilaritiesToFind());
         ConsolePrint.printInfo("Data-Output File: " + getDataOutputFileName());
         ConsolePrint.printInfo("Append/Overwrite Mode: " + appendOverwrite);
+        ConsolePrint.printInfo("Include Similarity Score: " + getAddSimilarityScore());
         System.out.println();
     }
 
