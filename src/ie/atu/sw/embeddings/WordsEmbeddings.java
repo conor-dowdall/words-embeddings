@@ -2,7 +2,6 @@ package ie.atu.sw.embeddings;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,6 +17,7 @@ import ie.atu.sw.util.Vector;
 public class WordsEmbeddings {
 
     private String fileName;
+    private String delimiter;
 
     private String[] words;
     private int numberOfWords;
@@ -30,17 +30,8 @@ public class WordsEmbeddings {
 
     private SimilarityAlgorithm similarityAlgorithm = SimilarityAlgorithm.COSINE_DISTANCE;
 
-    public WordsEmbeddings() throws Exception {
-        this(getDefaultWordEmbeddingsFileName());
-    }
-
     public WordsEmbeddings(String fileName) throws Exception {
         setFileName(fileName);
-    }
-
-    private static String getDefaultWordEmbeddingsFileName() {
-        URL url = WordsEmbeddings.class.getResource("./words-embeddings.txt");
-        return url.getFile();
     }
 
     public String getFileName() {
@@ -244,12 +235,34 @@ public class WordsEmbeddings {
         }
     }
 
-    private int countEmbeddingsFeatures(String embeddingsLine) throws Exception {
-        String[] stringArray = embeddingsLine.split(", ");
-        int stringLength = stringArray.length;
+    private String[] splitWithCommasOrSpaces(String delimitedString) throws Exception {
+        String[] delimiters = {
+                ", ",
+                ",",
+                " "
+        };
 
-        if (stringLength < 2)
-            throw new Exception("The file provided is in the wrong format.");
+        String[] splitString = null;
+        String tempDelimiter = null;
+
+        for (String delimiter : delimiters) {
+            splitString = delimitedString.split(delimiter);
+            if (splitString.length > 1) {
+                tempDelimiter = delimiter;
+                break;
+            }
+        }
+
+        if (tempDelimiter == null)
+            throw new Exception("Cannot determine the delimiter for the input data.");
+
+        this.delimiter = tempDelimiter;
+        return splitString;
+    }
+
+    private int countEmbeddingsFeatures(String embeddingsLine) throws Exception {
+        String[] stringArray = splitWithCommasOrSpaces(embeddingsLine);
+        int stringLength = stringArray.length;
 
         return stringLength - 1;
     }
@@ -257,12 +270,13 @@ public class WordsEmbeddings {
     private void printFileLoadingHeader() {
         System.out.println();
         System.out.println("Loading Embeddings From:\t" + this.fileName);
+        System.out.println("Delimiter:\t\t\t'" + this.delimiter + "'");
         System.out.println("#Words:\t\t\t\t" + this.numberOfWords);
         System.out.println("#Features/Word:\t\t\t" + this.numberOfFeatures);
     }
 
     private void setWordAndEmbeddingsValues(String embeddingsFileLine, int lineNumber) throws Exception {
-        String[] wordAndEmbeddings = embeddingsFileLine.split(", ");
+        String[] wordAndEmbeddings = embeddingsFileLine.split(this.delimiter);
 
         if (wordAndEmbeddings.length != this.numberOfFeatures + 1) {
             System.out.println(ConsoleColour.RESET + "\n");
