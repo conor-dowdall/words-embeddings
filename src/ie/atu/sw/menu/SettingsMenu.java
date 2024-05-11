@@ -30,6 +30,14 @@ public class SettingsMenu {
         return this.wordsEmbeddings;
     }
 
+    private String getWordsEmbeddingsFileName() {
+        return this.preferences.get("wordsEmbeddingsFileName", "./word-embeddings.txt");
+    }
+
+    private void setWordsEmbeddingsFileName(String fileName) {
+        this.preferences.put("wordsEmbeddingsFileName", fileName);
+    }
+
     public int getNumberOfSimilaritiesToFind() {
         return this.preferences.getInt("numberOfSimilaritiesToFind", 10);
     }
@@ -96,7 +104,9 @@ public class SettingsMenu {
     public void loadNewWordsEmbeddingsFile() throws Exception {
         ConsolePrint.printHeading("Load Words-Embeddings File");
 
-        String wordsEmbeddingsFileName = scanFileName();
+        String wordsEmbeddingsFileName = scanFileName(getWordsEmbeddingsFileName());
+
+        setWordsEmbeddingsFileName(wordsEmbeddingsFileName);
 
         this.wordsEmbeddings = new WordsEmbeddings(wordsEmbeddingsFileName);
 
@@ -113,12 +123,13 @@ public class SettingsMenu {
         ConsolePrint.printInfo("Number of Similarities To Find is set to: " + similarities);
     }
 
-    private String scanFileName() throws Exception {
+    private String scanFileName(String defaultFileName) {
+        ConsolePrint.printInfo("hit ENTER for default: " + defaultFileName);
         System.out.print("Enter file name: ");
         String input = this.inputScanner.nextLine();
 
         if (input.equals(""))
-            throw new Exception("No file name provided");
+            input = defaultFileName;
 
         return input;
     }
@@ -157,10 +168,10 @@ public class SettingsMenu {
         ConsolePrint.printInfo("Similarity algorithm scores will be used in output data");
     }
 
-    private void specifyNewDataOutputFileName() throws Exception {
+    private void specifyNewDataOutputFileName() {
         ConsolePrint.printHeading("Specify Data-Output File");
 
-        String dataOutputFileName = scanFileName();
+        String dataOutputFileName = scanFileName(getDataOutputFileName());
 
         setDataOutputFileName(dataOutputFileName);
 
