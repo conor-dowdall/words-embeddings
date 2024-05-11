@@ -70,7 +70,9 @@ public class MainMenu {
         System.out.print("Enter word(s): ");
 
         String input = this.inputScanner.nextLine();
-        String[] words = input.split(" ");
+        String sanitizedInput = input.replaceAll("[\s]+", " ").replaceAll("[^a-zA-Z\s]", "").toLowerCase();
+        ConsolePrint.printInfo("Formatting Input To: " + sanitizedInput);
+        String[] words = sanitizedInput.split(" ");
 
         File dataOutputFile = new File(settingsMenu.getDataOutputFileName());
         FileWriter dataOutputFileWriter = new FileWriter(dataOutputFile, settingsMenu.getAppendDataOutputFile());
@@ -86,6 +88,9 @@ public class MainMenu {
                         similar);
 
                 String heading = settingsMenu.getNumberOfSimilaritiesToFind() + " ";
+                heading += settingsMenu.getAddSimilarityScore()
+                        ? "Scores/"
+                        : "";
                 heading += similar
                         ? "Words Similar To '"
                         : "Words Dissimilar To '";
@@ -96,19 +101,15 @@ public class MainMenu {
                 dataOutputBufferedWriter.newLine();
 
                 for (int i = 0; i < similarWords.length; i++) {
-                    String similarWordsCount = (i + 1) + ") ";
-                    System.out.print(similarWordsCount);
-                    dataOutputBufferedWriter.write(similarWordsCount);
+                    if (settingsMenu.getAddSimilarityScore()) {
+                        double score = settingsMenu.getWordsEmbeddings().getPreviousSimilarWordsScores()[i];
+                        String formattedScore = String.format("%20.18f", score);
+                        System.out.print(formattedScore + " ");
+                        dataOutputBufferedWriter.write(formattedScore + " ");
+                    }
 
                     System.out.print(similarWords[i]);
                     dataOutputBufferedWriter.write(similarWords[i]);
-
-                    if (settingsMenu.getAddSimilarityScore()) {
-                        String score = " " + Double
-                                .toString(settingsMenu.getWordsEmbeddings().getPreviousSimilarWordsScores()[i]);
-                        System.out.println(score);
-                        dataOutputBufferedWriter.write(score);
-                    }
 
                     System.out.println();
                     dataOutputBufferedWriter.newLine();
