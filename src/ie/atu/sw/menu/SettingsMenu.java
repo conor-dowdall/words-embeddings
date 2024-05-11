@@ -106,9 +106,9 @@ public class SettingsMenu {
 
         String wordsEmbeddingsFileName = scanFileName(getWordsEmbeddingsFileName());
 
-        setWordsEmbeddingsFileName(wordsEmbeddingsFileName);
-
         this.wordsEmbeddings = new WordsEmbeddings(wordsEmbeddingsFileName);
+
+        setWordsEmbeddingsFileName(wordsEmbeddingsFileName);
 
         ConsolePrint.printInfo("Words-Embeddings file loaded: " + wordsEmbeddingsFileName);
     }
