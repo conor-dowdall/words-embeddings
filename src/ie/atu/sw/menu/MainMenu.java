@@ -73,7 +73,7 @@ public class MainMenu {
 
         String input = this.inputScanner.nextLine();
         String sanitizedInput = input.replaceAll("[\s]+", " ").replaceAll("[^a-zA-Z\s]", "").toLowerCase();
-        ConsolePrint.printInfo("Interpretting input as: '" + sanitizedInput + "'");
+        ConsolePrint.printInfo("Interpreting input as: '" + sanitizedInput + "'");
         String[] words = sanitizedInput.split(" ");
 
         File dataOutputFile = new File(settingsMenu.getDataOutputFileName());
