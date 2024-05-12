@@ -2,11 +2,11 @@ package ie.atu.sw.menu;
 
 import java.io.File;
 import java.util.Scanner;
-import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import ie.atu.sw.console.ConsolePrint;
 import ie.atu.sw.embeddings.WordsEmbeddings;
+import ie.atu.sw.util.SimilarityAlgorithm;
 
 public class SettingsMenu {
 
@@ -46,6 +46,16 @@ public class SettingsMenu {
         this.preferences.putInt("numberOfSimilaritiesToFind", number);
     }
 
+    public SimilarityAlgorithm getSimilarityAlgorithm() throws Exception {
+        String algorithmNumber = this.preferences.get("similarityAlgorithmNumber", "4");
+        return SimilarityAlgorithmMenuItem.valueOfKey(algorithmNumber);
+    }
+
+    private void setSimilarityAlgorithm(SimilarityAlgorithm algorithm) {
+        String algorithmNumber = Integer.toString(algorithm.ordinal() + 1);
+        this.preferences.put("similarityAlgorithmNumber", algorithmNumber);
+    }
+
     public boolean getAddSimilarityScore() {
         return this.preferences.getBoolean("addSimilarityScore", false);
     }
@@ -81,13 +91,14 @@ public class SettingsMenu {
 
             switch (item) {
                 case EMBEDDINGS_FILE -> loadNewWordsEmbeddingsFile();
-                case SIMILARITIES_NUMBER -> specifySimilarities();
-                case SIMILARITIES_ALGORITHM -> System.out.println("TODO");
+                case SIMILARITIES_NUMBER -> specifySimilaritiesNumber();
+                case SIMILARITIES_ALGORITHM -> specifySimilarityAlgorithm();
                 case TOGGLE_SIMILARITY_SCORE -> toggleAddSimilarityScore();
                 case OUTPUT_FILE -> specifyNewDataOutputFileName();
                 case TOGGLE_APPEND -> toggleAppendDataOutputFile();
                 case EMPTY_OUTPUT_FILE -> emptyDataOutputFile();
                 case RESET -> resetSettings();
+                case PRINT -> printSettings();
                 case QUIT -> quitSettings();
                 default -> throw new Exception("This should never happen!");
             }
@@ -113,7 +124,7 @@ public class SettingsMenu {
         ConsolePrint.printInfo("Words-Embeddings file loaded: " + wordsEmbeddingsFileName);
     }
 
-    private void specifySimilarities() throws Exception {
+    private void specifySimilaritiesNumber() throws Exception {
         ConsolePrint.printHeading("Specify Number of Similarities to Find");
 
         int similarities = scanSimilarities();
@@ -121,6 +132,19 @@ public class SettingsMenu {
         setNumberOfSimilaritiesToFind(similarities);
 
         ConsolePrint.printInfo("Number of Similarities To Find is set to: " + similarities);
+    }
+
+    private void specifySimilarityAlgorithm() throws Exception {
+        SimilarityAlgorithmMenuItem.printTitle();
+        SimilarityAlgorithmMenuItem.printOptions();
+
+        String input = this.inputScanner.nextLine();
+
+        SimilarityAlgorithm algorithm = SimilarityAlgorithmMenuItem.valueOfKey(input);
+
+        setSimilarityAlgorithm(algorithm);
+
+        ConsolePrint.printInfo("Similarity Algorithm set to: " + algorithm);
     }
 
     private String scanFileName(String defaultFileName) {
@@ -205,14 +229,14 @@ public class SettingsMenu {
         ConsolePrint.printInfo("Data-Output file is now empty: " + getDataOutputFileName());
     }
 
-    private void resetSettings() throws BackingStoreException {
+    private void resetSettings() throws Exception {
         this.preferences.clear();
 
         ConsolePrint.printHeading("Settings reset to default values");
         printSettings();
     }
 
-    public void printSettings() {
+    public void printSettings() throws Exception {
 
         String wordsEmbeddingsFileName = this.wordsEmbeddings == null ? "NOT SET" : this.wordsEmbeddings.getFileName();
         String appendOverwrite = getAppendDataOutputFile() ? "append" : "overwrite";
@@ -222,6 +246,7 @@ public class SettingsMenu {
         ConsolePrint.printInfo("Data-Output File: " + getDataOutputFileName());
         ConsolePrint.printInfo("Append/Overwrite Mode: " + appendOverwrite);
         ConsolePrint.printInfo("Include Similarity Score: " + getAddSimilarityScore());
+        ConsolePrint.printInfo("Similarity Algorithm: " + getSimilarityAlgorithm());
         System.out.println();
     }
 

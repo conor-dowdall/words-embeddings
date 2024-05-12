@@ -60,6 +60,8 @@ public class MainMenu {
         if (settingsMenu.getWordsEmbeddings() == null)
             settingsMenu.loadNewWordsEmbeddingsFile();
 
+        settingsMenu.getWordsEmbeddings().setSimilarityAlgorithm(settingsMenu.getSimilarityAlgorithm());
+
         if (similar)
             ConsolePrint.printTitle("Find Similar Words");
         else
@@ -71,7 +73,7 @@ public class MainMenu {
 
         String input = this.inputScanner.nextLine();
         String sanitizedInput = input.replaceAll("[\s]+", " ").replaceAll("[^a-zA-Z\s]", "").toLowerCase();
-        ConsolePrint.printInfo("Formatting Input To: " + sanitizedInput);
+        ConsolePrint.printInfo("Interpretting input as: '" + sanitizedInput + "'");
         String[] words = sanitizedInput.split(" ");
 
         File dataOutputFile = new File(settingsMenu.getDataOutputFileName());
@@ -92,9 +94,10 @@ public class MainMenu {
                         ? "Scores/"
                         : "";
                 heading += similar
-                        ? "Words Similar To '"
-                        : "Words Dissimilar To '";
+                        ? "Words Similar to '"
+                        : "Words Dissimilar to '";
                 heading += word + "'";
+                heading += " using " + settingsMenu.getSimilarityAlgorithm() + ":";
 
                 ConsolePrint.printHeading(heading);
                 dataOutputBufferedWriter.write(heading);
@@ -103,7 +106,7 @@ public class MainMenu {
                 for (int i = 0; i < similarWords.length; i++) {
                     if (settingsMenu.getAddSimilarityScore()) {
                         double score = settingsMenu.getWordsEmbeddings().getPreviousSimilarWordsScores()[i];
-                        String formattedScore = String.format("%20.18f", score);
+                        String formattedScore = String.format("%24.18f", score);
                         System.out.print(formattedScore + " ");
                         dataOutputBufferedWriter.write(formattedScore + " ");
                     }

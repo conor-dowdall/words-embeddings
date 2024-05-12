@@ -12,6 +12,7 @@ public enum SettingsMenuItem {
     TOGGLE_APPEND("Toggle Append/Overwrite Data-Output File", null),
     EMPTY_OUTPUT_FILE("Empty the Output File", null),
     RESET("Reset Settings to Defaults", null),
+    PRINT("Print Current Settings", null),
     QUIT("Close Settings", "q");
 
     public final String key;
