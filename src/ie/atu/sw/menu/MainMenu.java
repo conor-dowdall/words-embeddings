@@ -1,8 +1,6 @@
 package ie.atu.sw.menu;
 
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.nio.file.NoSuchFileException;
 import java.util.Scanner;
 
@@ -57,10 +55,7 @@ public class MainMenu {
     }
 
     private void launchSimilarWords(boolean similar) throws Exception {
-        if (settingsMenu.getWordsEmbeddings() == null)
-            settingsMenu.loadNewWordsEmbeddingsFile();
-
-        settingsMenu.getWordsEmbeddings().setSimilarityAlgorithm(settingsMenu.getSimilarityAlgorithm());
+        settingsMenu.initWordsEmbeddings();
 
         if (similar)
             ConsolePrint.printTitle("Find Similar Words");
@@ -72,19 +67,22 @@ public class MainMenu {
         System.out.print("Enter word(s): ");
 
         String input = this.inputScanner.nextLine();
-        String sanitizedInput = input.replaceAll("[\s]+", " ").replaceAll("[^a-zA-Z\s]", "").toLowerCase();
+        String sanitizedInput = input.replaceAll("[\s]+", " ").toLowerCase();
         ConsolePrint.printInfo("Interpreting input as: '" + sanitizedInput + "'");
         String[] words = sanitizedInput.split(" ");
 
-        File dataOutputFile = new File(settingsMenu.getDataOutputFileName());
-        FileWriter dataOutputFileWriter = new FileWriter(dataOutputFile, settingsMenu.getAppendDataOutputFile());
-        BufferedWriter dataOutputBufferedWriter = new BufferedWriter(dataOutputFileWriter);
+        BufferedWriter dataOutputBufferedWriter = this.settingsMenu.getDataOutputBufferedWriter();
+        // File dataOutputFile = new File(settingsMenu.getDataOutputFileName());
+        // FileWriter dataOutputFileWriter = new FileWriter(dataOutputFile,
+        // settingsMenu.getAppendDataOutputFile());
+        // BufferedWriter dataOutputBufferedWriter = new
+        // BufferedWriter(dataOutputFileWriter);
 
         for (String word : words) {
 
             try {
 
-                String[] similarWords = this.settingsMenu.getWordsEmbeddings().getSimilarWords(
+                String[] similarWords = settingsMenu.getWordsEmbeddings().getSimilarWords(
                         word,
                         settingsMenu.getNumberOfSimilaritiesToFind(),
                         similar);
@@ -128,7 +126,8 @@ public class MainMenu {
         dataOutputBufferedWriter.close();
     }
 
-    private void launchWordCalculator() {
+    private void launchWordCalculator() throws Exception {
+        new WordCalculatorMenu(this.inputScanner, this.settingsMenu).launchMenu();
     }
 
     private void launchSettingsMenu() throws Exception {
