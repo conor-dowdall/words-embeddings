@@ -23,13 +23,6 @@ public class SettingsMenu {
         this.preferences = Preferences.userNodeForPackage(SettingsMenu.class);
     }
 
-    public void launchMenu() throws Exception {
-        keepSettingsOpen = true;
-
-        SettingsMenuItem.printTitle();
-        printOptionsAndProcessInput();
-    }
-
     public WordsEmbeddings getWordsEmbeddings() {
         return this.wordsEmbeddings;
     }
@@ -91,11 +84,18 @@ public class SettingsMenu {
         this.preferences.putBoolean("appendDataOutputFile", append);
     }
 
-    private void printOptionsAndProcessInput() throws Exception {
+    public void launchMenu() throws Exception {
+        keepSettingsOpen = true;
+
+        SettingsMenuItem.printTitle();
+        SettingsMenuItem.printOptions();
+
+        processInput();
+    }
+
+    private void processInput() throws Exception {
 
         try {
-
-            SettingsMenuItem.printOptions();
 
             String input = this.inputScanner.nextLine();
             SettingsMenuItem item = SettingsMenuItem.valueOfKey(input);
