@@ -1,6 +1,9 @@
 package ie.atu.sw.menu;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.prefs.Preferences;
 
@@ -21,8 +24,9 @@ public class SettingsMenu {
     }
 
     public void launchMenu() throws Exception {
-        SettingsMenuItem.printTitle();
         keepSettingsOpen = true;
+
+        SettingsMenuItem.printTitle();
         printOptionsAndProcessInput();
     }
 
@@ -72,6 +76,13 @@ public class SettingsMenu {
         this.preferences.put("dataOutputFileName", fileName);
     }
 
+    public BufferedWriter getDataOutputBufferedWriter() throws IOException {
+        File dataOutputFile = new File(getDataOutputFileName());
+        FileWriter dataOutputFileWriter = new FileWriter(dataOutputFile, getAppendDataOutputFile());
+        BufferedWriter dataOutputBufferedWriter = new BufferedWriter(dataOutputFileWriter);
+        return dataOutputBufferedWriter;
+    }
+
     public boolean getAppendDataOutputFile() {
         return this.preferences.getBoolean("appendDataOutputFile", true);
     }
@@ -106,10 +117,17 @@ public class SettingsMenu {
         } catch (Exception e) {
             ConsolePrint.printError(e.getMessage());
         } finally {
-            if (keepSettingsOpen)
+            if (this.keepSettingsOpen)
                 launchMenu();
         }
 
+    }
+
+    public void initWordsEmbeddings() throws Exception {
+        if (this.wordsEmbeddings == null)
+            loadNewWordsEmbeddingsFile();
+
+        this.wordsEmbeddings.setSimilarityAlgorithm(getSimilarityAlgorithm());
     }
 
     public void loadNewWordsEmbeddingsFile() throws Exception {
@@ -251,7 +269,7 @@ public class SettingsMenu {
     }
 
     private void quitSettings() {
-        keepSettingsOpen = false;
+        this.keepSettingsOpen = false;
 
         ConsolePrint.printInfo("Close Settings Menu");
     }
