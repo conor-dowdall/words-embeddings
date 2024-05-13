@@ -10,7 +10,8 @@ public class WordCalculatorMenu {
     private Scanner inputScanner;
     private SettingsMenu settingsMenu;
     private BufferedWriter dataOutputBufferedWriter;
-    private StringBuilder wordCalculation = new StringBuilder();
+    private StringBuilder currentWordCalculation = new StringBuilder();
+    private double[] currentEmbedding;
     private boolean keepWordCalculatorOpen;
 
     public WordCalculatorMenu(Scanner inputScanner, SettingsMenu settingsMenu) throws Exception {
@@ -30,8 +31,10 @@ public class WordCalculatorMenu {
 
         String input = processWordInput();
 
-        this.wordCalculation.append(input);
-        this.wordCalculation.append("; ");
+        this.currentWordCalculation.append(input);
+        this.currentWordCalculation.append("; ");
+
+        this.currentEmbedding = this.settingsMenu.getWordsEmbeddings().getWordEmbedding(input);
 
         printOptionsAndProcessInput();
     }
@@ -45,7 +48,7 @@ public class WordCalculatorMenu {
             WordCalculatorMenuItem item = WordCalculatorMenuItem.valueOfKey(input);
 
             switch (item) {
-                case ADD -> System.out.println("add");
+                case ADD -> add();
                 case SUBTRACT -> System.out.println("subtract");
                 case MULTIPLY -> System.out.println("multiply");
                 case DIVIDE -> System.out.println("divide");
@@ -71,6 +74,42 @@ public class WordCalculatorMenu {
         ConsolePrint.printInfo("Interpreting input as: '" + sanitizedInput + "'");
 
         return input;
+    }
+
+    private void add() throws Exception {
+        String input = processWordInput();
+
+        this.currentWordCalculation.append("+ ");
+        this.currentWordCalculation.append(input);
+        this.currentWordCalculation.append("; ");
+        this.currentEmbedding = this.settingsMenu.getWordsEmbeddings().add(input, this.currentEmbedding);
+
+        String[] similarWords = settingsMenu.getWordsEmbeddings().getSimilarWords(
+                this.currentEmbedding,
+                settingsMenu.getNumberOfSimilaritiesToFind());
+
+        String heading = settingsMenu.getSettingsAsHeading(true, this.currentWordCalculation.toString());
+
+        ConsolePrint.printHeading(heading);
+        dataOutputBufferedWriter.write(heading);
+        dataOutputBufferedWriter.newLine();
+
+        for (int i = 0; i < similarWords.length; i++) {
+            if (settingsMenu.getAddSimilarityScore()) {
+                double score = settingsMenu.getWordsEmbeddings().getPreviousSimilarWordsScores()[i];
+                String formattedScore = String.format("%24.18f", score);
+                System.out.print(formattedScore + " ");
+                dataOutputBufferedWriter.write(formattedScore + " ");
+            }
+
+            System.out.print(similarWords[i]);
+            dataOutputBufferedWriter.write(similarWords[i]);
+
+            System.out.println();
+            dataOutputBufferedWriter.newLine();
+        }
+
+        dataOutputBufferedWriter.newLine();
     }
 
     private void quitWordCalculator() throws IOException {
