@@ -58,7 +58,7 @@ public class WordCalculatorMenu {
             ConsolePrint.printError(e.getMessage());
         } finally {
             if (this.keepWordCalculatorOpen)
-                launchMenu();
+                printOptionsAndProcessInput();
         }
 
     }
@@ -78,6 +78,6 @@ public class WordCalculatorMenu {
 
         this.dataOutputBufferedWriter.close();
 
-        ConsolePrint.printInfo("Close Settings Menu");
+        ConsolePrint.printInfo("Close Word Calculator");
     }
 }
