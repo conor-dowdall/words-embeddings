@@ -84,6 +84,20 @@ public class SettingsMenu {
         this.preferences.putBoolean("appendDataOutputFile", append);
     }
 
+    public String getSettingsAsHeading(boolean similar, String word) throws Exception {
+        String heading = getNumberOfSimilaritiesToFind() + " ";
+        heading += getAddSimilarityScore()
+                ? "Scores/"
+                : "";
+        heading += similar
+                ? "Words Similar to '"
+                : "Words Dissimilar to '";
+        heading += word + "'";
+        heading += " using " + getSimilarityAlgorithm() + ":";
+
+        return heading;
+    }
+
     public void launchMenu() throws Exception {
         keepSettingsOpen = true;
 

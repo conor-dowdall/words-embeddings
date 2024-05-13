@@ -82,15 +82,7 @@ public class MainMenu {
                         settingsMenu.getNumberOfSimilaritiesToFind(),
                         similar);
 
-                String heading = settingsMenu.getNumberOfSimilaritiesToFind() + " ";
-                heading += settingsMenu.getAddSimilarityScore()
-                        ? "Scores/"
-                        : "";
-                heading += similar
-                        ? "Words Similar to '"
-                        : "Words Dissimilar to '";
-                heading += word + "'";
-                heading += " using " + settingsMenu.getSimilarityAlgorithm() + ":";
+                String heading = settingsMenu.getSettingsAsHeading(similar, word);
 
                 ConsolePrint.printHeading(heading);
                 dataOutputBufferedWriter.write(heading);
@@ -110,6 +102,7 @@ public class MainMenu {
                     System.out.println();
                     dataOutputBufferedWriter.newLine();
                 }
+
                 dataOutputBufferedWriter.newLine();
 
             } catch (Exception e) {
