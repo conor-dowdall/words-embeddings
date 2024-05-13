@@ -83,6 +83,11 @@ public class WordsEmbeddings {
         throw new Exception("Cannot find word: '" + word + "'");
     }
 
+    public double[] getWordEmbedding(String word) throws Exception {
+        int wordIndex = getWordIndex(word);
+        return this.embeddings[wordIndex];
+    }
+
     public double[] add(String word1, String word2) throws Exception {
         int wordIndex1 = getWordIndex(word1);
         int wordIndex2 = getWordIndex(word2);
