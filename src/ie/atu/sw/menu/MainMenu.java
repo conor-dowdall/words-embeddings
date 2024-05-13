@@ -16,13 +16,13 @@ public class MainMenu {
 
     public void launchMenu() throws Exception {
         MainMenuItem.printTitle();
-        printOptionsAndProcessInput();
+        MainMenuItem.printOptions();
+
+        processInput();
     }
 
-    private void printOptionsAndProcessInput() throws Exception {
+    private void processInput() throws Exception {
         try {
-
-            MainMenuItem.printOptions();
 
             String input = this.inputScanner.nextLine();
             MainMenuItem item = MainMenuItem.valueOfKey(input);
@@ -72,11 +72,6 @@ public class MainMenu {
         String[] words = sanitizedInput.split(" ");
 
         BufferedWriter dataOutputBufferedWriter = this.settingsMenu.getDataOutputBufferedWriter();
-        // File dataOutputFile = new File(settingsMenu.getDataOutputFileName());
-        // FileWriter dataOutputFileWriter = new FileWriter(dataOutputFile,
-        // settingsMenu.getAppendDataOutputFile());
-        // BufferedWriter dataOutputBufferedWriter = new
-        // BufferedWriter(dataOutputFileWriter);
 
         for (String word : words) {
 
