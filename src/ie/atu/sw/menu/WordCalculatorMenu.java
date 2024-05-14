@@ -1,6 +1,5 @@
 package ie.atu.sw.menu;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -9,7 +8,6 @@ import ie.atu.sw.console.ConsolePrint;
 public class WordCalculatorMenu {
     private Scanner inputScanner;
     private SettingsMenu settingsMenu;
-    private BufferedWriter dataOutputBufferedWriter;
     private StringBuilder currentWordCalculation = new StringBuilder();
     private double[] currentEmbedding;
     private boolean keepWordCalculatorOpen;
@@ -19,8 +17,6 @@ public class WordCalculatorMenu {
         this.settingsMenu = settingsMenu;
 
         this.settingsMenu.initWordsEmbeddings();
-        this.dataOutputBufferedWriter = this.settingsMenu.getDataOutputBufferedWriter();
-
     }
 
     public void launchMenu() throws Exception {
@@ -32,9 +28,14 @@ public class WordCalculatorMenu {
         String input = processWordInput();
 
         this.currentWordCalculation.append(input);
-        this.currentWordCalculation.append("; ");
+        this.currentWordCalculation.append(";");
 
         this.currentEmbedding = this.settingsMenu.getWordsEmbeddings().getWordEmbedding(input);
+        settingsMenu.getWordsEmbeddings().getSimilarWords(
+                this.currentEmbedding,
+                settingsMenu.getNumberOfSimilaritiesToFind());
+
+        settingsMenu.printDataOutput(this.currentWordCalculation.toString(), true);
 
         printOptionsAndProcessInput();
     }
@@ -42,16 +43,45 @@ public class WordCalculatorMenu {
     private void printOptionsAndProcessInput() throws Exception {
         try {
 
+            ConsolePrint.printTitle("Word Calculator\n" + this.currentWordCalculation.toString());
             WordCalculatorMenuItem.printOptions();
 
             String input = this.inputScanner.nextLine();
             WordCalculatorMenuItem item = WordCalculatorMenuItem.valueOfKey(input);
 
             switch (item) {
-                case ADD -> add();
-                case SUBTRACT -> System.out.println("subtract");
-                case MULTIPLY -> System.out.println("multiply");
-                case DIVIDE -> System.out.println("divide");
+                case ADD -> {
+                    input = processWordInput();
+                    this.currentWordCalculation.append(" + ");
+                    this.currentEmbedding = this.settingsMenu.getWordsEmbeddings().add(
+                            this.currentEmbedding,
+                            input);
+                    calculateAndPrintOutput(input);
+                }
+                case SUBTRACT -> {
+                    input = processWordInput();
+                    this.currentWordCalculation.append(" - ");
+                    this.currentEmbedding = this.settingsMenu.getWordsEmbeddings().subtract(
+                            this.currentEmbedding,
+                            input);
+                    calculateAndPrintOutput(input);
+                }
+                case MULTIPLY -> {
+                    input = processWordInput();
+                    this.currentWordCalculation.append(" * ");
+                    this.currentEmbedding = this.settingsMenu.getWordsEmbeddings().multiply(
+                            this.currentEmbedding,
+                            input);
+                    calculateAndPrintOutput(input);
+                }
+                case DIVIDE -> {
+                    input = processWordInput();
+                    this.currentWordCalculation.append(" / ");
+                    this.currentEmbedding = this.settingsMenu.getWordsEmbeddings().divide(
+                            this.currentEmbedding,
+                            input);
+                    calculateAndPrintOutput(input);
+                }
                 case QUIT -> quitWordCalculator();
             }
 
@@ -73,49 +103,22 @@ public class WordCalculatorMenu {
         String sanitizedInput = input.replaceAll("[\s]+", " ").toLowerCase().split(" ")[0];
         ConsolePrint.printInfo("Interpreting input as: '" + sanitizedInput + "'");
 
-        return input;
+        return sanitizedInput;
     }
 
-    private void add() throws Exception {
-        String input = processWordInput();
-
-        this.currentWordCalculation.append("+ ");
+    private void calculateAndPrintOutput(String input) throws Exception {
         this.currentWordCalculation.append(input);
-        this.currentWordCalculation.append("; ");
-        this.currentEmbedding = this.settingsMenu.getWordsEmbeddings().add(input, this.currentEmbedding);
+        this.currentWordCalculation.append(";");
 
-        String[] similarWords = settingsMenu.getWordsEmbeddings().getSimilarWords(
+        settingsMenu.getWordsEmbeddings().getSimilarWords(
                 this.currentEmbedding,
                 settingsMenu.getNumberOfSimilaritiesToFind());
 
-        String heading = settingsMenu.getSettingsAsHeading(true, this.currentWordCalculation.toString());
-
-        ConsolePrint.printHeading(heading);
-        dataOutputBufferedWriter.write(heading);
-        dataOutputBufferedWriter.newLine();
-
-        for (int i = 0; i < similarWords.length; i++) {
-            if (settingsMenu.getAddSimilarityScore()) {
-                double score = settingsMenu.getWordsEmbeddings().getPreviousSimilarWordsScores()[i];
-                String formattedScore = String.format("%24.18f", score);
-                System.out.print(formattedScore + " ");
-                dataOutputBufferedWriter.write(formattedScore + " ");
-            }
-
-            System.out.print(similarWords[i]);
-            dataOutputBufferedWriter.write(similarWords[i]);
-
-            System.out.println();
-            dataOutputBufferedWriter.newLine();
-        }
-
-        dataOutputBufferedWriter.newLine();
+        settingsMenu.printDataOutput(this.currentWordCalculation.toString(), true);
     }
 
     private void quitWordCalculator() throws IOException {
         this.keepWordCalculatorOpen = false;
-
-        this.dataOutputBufferedWriter.close();
 
         ConsolePrint.printInfo("Close Word Calculator");
     }
