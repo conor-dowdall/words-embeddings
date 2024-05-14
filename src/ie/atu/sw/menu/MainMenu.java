@@ -1,6 +1,5 @@
 package ie.atu.sw.menu;
 
-import java.io.BufferedWriter;
 import java.nio.file.NoSuchFileException;
 import java.util.Scanner;
 
@@ -71,39 +70,16 @@ public class MainMenu {
         ConsolePrint.printInfo("Interpreting input as: '" + sanitizedInput + "'");
         String[] words = sanitizedInput.split(" ");
 
-        BufferedWriter dataOutputBufferedWriter = this.settingsMenu.getDataOutputBufferedWriter();
-
         for (String word : words) {
 
             try {
 
-                String[] similarWords = settingsMenu.getWordsEmbeddings().getSimilarWords(
+                settingsMenu.getWordsEmbeddings().getSimilarWords(
                         word,
                         settingsMenu.getNumberOfSimilaritiesToFind(),
                         similar);
 
-                String heading = settingsMenu.getSettingsAsHeading(similar, word);
-
-                ConsolePrint.printHeading(heading);
-                dataOutputBufferedWriter.write(heading);
-                dataOutputBufferedWriter.newLine();
-
-                for (int i = 0; i < similarWords.length; i++) {
-                    if (settingsMenu.getAddSimilarityScore()) {
-                        double score = settingsMenu.getWordsEmbeddings().getPreviousSimilarWordsScores()[i];
-                        String formattedScore = String.format("%24.18f", score);
-                        System.out.print(formattedScore + " ");
-                        dataOutputBufferedWriter.write(formattedScore + " ");
-                    }
-
-                    System.out.print(similarWords[i]);
-                    dataOutputBufferedWriter.write(similarWords[i]);
-
-                    System.out.println();
-                    dataOutputBufferedWriter.newLine();
-                }
-
-                dataOutputBufferedWriter.newLine();
+                settingsMenu.printDataOutput(word, similar);
 
             } catch (Exception e) {
                 ConsolePrint.printError(e.getMessage());
@@ -111,7 +87,6 @@ public class MainMenu {
 
         }
 
-        dataOutputBufferedWriter.close();
     }
 
     private void launchWordCalculator() throws Exception {

@@ -84,7 +84,7 @@ public class SettingsMenu {
         this.preferences.putBoolean("appendDataOutputFile", append);
     }
 
-    public String getSettingsAsHeading(boolean similar, String word) throws Exception {
+    public String getSettingsAsHeading(String dataInput, boolean similar) throws Exception {
         String heading = getNumberOfSimilaritiesToFind() + " ";
         heading += getAddSimilarityScore()
                 ? "Scores/"
@@ -92,10 +92,38 @@ public class SettingsMenu {
         heading += similar
                 ? "Words Similar to '"
                 : "Words Dissimilar to '";
-        heading += word + "'";
+        heading += dataInput + "'";
         heading += " using " + getSimilarityAlgorithm() + ":";
 
         return heading;
+    }
+
+    public void printDataOutput(String dataInput, boolean similar) throws Exception {
+        BufferedWriter dataOutputBufferedWriter = getDataOutputBufferedWriter();
+
+        String heading = getSettingsAsHeading(dataInput, similar);
+
+        ConsolePrint.printHeading(heading);
+        dataOutputBufferedWriter.write(heading);
+        dataOutputBufferedWriter.newLine();
+
+        for (int i = 0; i < getWordsEmbeddings().getPreviousSimilarWords().length; i++) {
+            if (getAddSimilarityScore()) {
+                double score = getWordsEmbeddings().getPreviousSimilarWordsScores()[i];
+                String formattedScore = String.format("%24.18f", score);
+                System.out.print(formattedScore + " ");
+                dataOutputBufferedWriter.write(formattedScore + " ");
+            }
+
+            System.out.print(getWordsEmbeddings().getPreviousSimilarWords()[i]);
+            dataOutputBufferedWriter.write(getWordsEmbeddings().getPreviousSimilarWords()[i]);
+
+            System.out.println();
+            dataOutputBufferedWriter.newLine();
+        }
+
+        dataOutputBufferedWriter.newLine();
+        dataOutputBufferedWriter.close();
     }
 
     public void launchMenu() throws Exception {
