@@ -148,6 +148,26 @@ public class WordsEmbeddings {
         return Vector.multiply(embedding1, embedding2);
     }
 
+    public double[] divide(String word1, String word2) throws Exception {
+        int wordIndex1 = getWordIndex(word1);
+        int wordIndex2 = getWordIndex(word2);
+        return Vector.divide(this.embeddings[wordIndex1], this.embeddings[wordIndex2]);
+    }
+
+    public double[] divide(String word, double[] embedding) throws Exception {
+        int wordIndex = getWordIndex(word);
+        return Vector.divide(this.embeddings[wordIndex], embedding);
+    }
+
+    public double[] divide(double[] embedding, String word) throws Exception {
+        int wordIndex = getWordIndex(word);
+        return Vector.divide(embedding, this.embeddings[wordIndex]);
+    }
+
+    public double[] divide(double[] embedding1, double[] embedding2) throws Exception {
+        return Vector.divide(embedding1, embedding2);
+    }
+
     public String[] getSimilarWords(String word, int howMany) throws Exception {
         return getSimilarWords(word, howMany, true);
     }
