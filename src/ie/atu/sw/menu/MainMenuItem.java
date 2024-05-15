@@ -32,7 +32,7 @@ public enum MainMenuItem {
     }
 
     public static void printTitle() {
-        ConsolePrint.printTitle("Similarity Search with Word Embeddings");
+        ConsolePrint.printTitle("Words Embeddings Text Interface");
     }
 
     public static void printOptions() {
