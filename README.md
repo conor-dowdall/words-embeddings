@@ -2,74 +2,68 @@
 
 ## Words Embeddings Text Interface
 
-A terminal-based application to interact with vector representations for words, e.g. from [GloVe](https://nlp.stanford.edu/projects/glove/). Appropriate error checking is done at every stage in the program's execution, and suitable exceptions are thrown, and caught for display to the user.
+terminal-based application to interact with vector representations for words, e.g. from [GloVe](https://nlp.stanford.edu/projects/glove/)
 
-Built using:
-```java
-java --version
-openjdk 17.0.10 2024-01-16
-OpenJDK Runtime Environment (build 17.0.10+7-Ubuntu-123.10.1)
-OpenJDK 64-Bit Server VM (build 17.0.10+7-Ubuntu-123.10.1, mixed mode, sharing)
-```
+- openjdk 17.0.10 2024-01-16
+- robust error handling
 
-## src/ie/atu/sw/console
+### Console
 
-### ConsoleColour.java
-enum that predefines color codes for printing to the terminal
+**ConsoleColor** enum for terminal color codes
 
-### ConsolePrint.java
-class with static methods to print info, warnings, options, etc., in a consistent way
+**ConsolePrint** static methods for consistent message printing
 
-### ConsoleProgressMeter.java
-class with static method to display a text-based progress meter
+**ConsoleProgressMeter** static method for displaying a text-based progress meter
 
-## src/ie/atu/sw/embeddings
+### Words-Embeddings
 
-### WordsEmbeddings.java
-class to load-and-interact-with a words-embeddings file
-- auto-detects comma-or-space-based CSV format, and number of features in a word-embeddings file
-- includes methods to 
-    - search for a word's vector-embedding
-    - add, subtract, multiply, and divide words and/or word-vectors
-    - use various similarity algorithms to find similar-or-dissimilar words to a given word, or word-vector
+**WordsEmbeddings** class to load-and-interact-with a words-embeddings file
 
-## src/ie/atu/sw/menu
+- csv format detection
+- word vector operations (search, add, subtract, multiply, divide)
+- similarity algorithms to find similar/dissimilar words
 
-### MainMenuItem.java
-enum to store the main menu options
-- auto-generates a keyboard shortcut, based on position in list, or using a custom key
+### Menus
 
-### MainMenu.java
-class to accept user interactions in the terminal and run the available applications
+**MainMenuItem** enum for main menu options with auto-generated shortcuts
 
-#### [1] Find Similar Words
-accepts a word, or sequence of words, and finds the top matching words
+**MainMenu** handles user interactions and application launches; prompts for a word embeddings file, if not loaded
+1. **Find Similar Words** finds top matching words for a given input
+2. **Find Dissimilar Words** finds least matching words for a given input
+3. **Word Calculator** performs vector operations and finds top matching words
+4. **Settings** customizes application preferences
 
-#### [2] Find Dissimilar Words
-accepts a word, or sequence of words, and finds the bottom matching words
+**SettingsMenuItem** enum for settings menu options with auto-generated shortcuts
 
-#### [3] Word Calculator
-allows user to add, subtract, multiply, and divide words, then finds the top matching words
+**SettingsMenu** stores user preferences with persistent values; default settings included;
+1. **Load Word-Embeddings File**
+2. **Number of Similarities to Find** (0 < n <= #words)
+3. **Similarity Algorithm to Use**
+4. **Toggle Similarity Score in Output**
+5. **Specify Data-Output File**
+6. **Toggle Append/Overwrite Data-Output File**
+7. **Empty the Output File**
+8. **Reset Settings to Defaults**
+9. **Print Current Settings**
 
-#### [4] Settings
-allows user to customize the above applications
+**SimilarityAlgorithmMenuItem** turn utility class into a menu
 
-### SettingsMenuItem.java
-enum to store the settings menu options
-- auto-generates a keyboard shortcut, based on position in list, or using a custom key
+**WordCalculatorMenuItem** enum for calculator options
 
-### SettingsMenu.java
+**WordCalculatorMenu**
+1. **Add**
+2. **Subtract**
+3. **Multiply**
+4. **Divide**
 
-### SimilarityAlgorithmMenuItem.java
+### Utilities
 
-### WordCalculatorMenuItem.java
+**Array** static methods to find min-or-max values
 
-### WordCalculatorMenu.java
+**SimilarityAlgorithm** enum
+1. **Dot Product**
+2. **Euclidean Distance (No Square Root)**
+3. **Euclidean Distance**
+4. **Cosine Distance**
 
-## src/ie/atu/sw/util
-
-### Array.java
-
-### SimilarityAlgorithm.java
-
-### Vector.java
+**Vector** static methods for vector operations like add, subtract, dot product
