@@ -18,7 +18,7 @@ terminal-based application to interact with vector representations for words, e.
 
 ### Words-Embeddings
 
-**WordsEmbeddings** class to load-and-interact-with a words-embeddings file
+**WordsEmbeddings** load-and-interact-with a words-embeddings file
 
 - csv format detection
 - word vector operations (search, add, subtract, multiply, divide)
@@ -36,7 +36,7 @@ terminal-based application to interact with vector representations for words, e.
 
 **SettingsMenuItem** enum for settings menu options with auto-generated shortcuts
 
-**SettingsMenu** stores user preferences with persistent values; default settings included;
+**SettingsMenu** store user preferences with persistent values; default settings included
 1. **Load Word-Embeddings File**
 2. **Number of Similarities to Find** (0 < n <= #words)
 3. **Similarity Algorithm to Use**
@@ -51,7 +51,7 @@ terminal-based application to interact with vector representations for words, e.
 
 **WordCalculatorMenuItem** enum for calculator options
 
-**WordCalculatorMenu**
+**WordCalculatorMenu** perform vector operations on words' embeddings
 1. **Add**
 2. **Subtract**
 3. **Multiply**
