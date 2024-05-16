@@ -61,7 +61,7 @@ terminal-based application to interact with vector representations for words, e.
 
 **Array** static methods to find min-or-max values
 
-**SimilarityAlgorithm** enum
+**SimilarityAlgorithm** enum with abstract calculate method
 1. **Dot Product**
 2. **Euclidean Distance (No Square Root)**
 3. **Euclidean Distance**
