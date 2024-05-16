@@ -6,6 +6,7 @@ terminal-based application to interact with vector representations for words, e.
 
 - openjdk 17.0.10 2024-01-16
 - robust error handling
+- persistent settings storage
 
 ### Console
 
