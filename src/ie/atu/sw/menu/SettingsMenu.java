@@ -249,7 +249,10 @@ public class SettingsMenu {
     private void toggleAddSimilarityScore() {
         setAddSimilarityScore(!getAddSimilarityScore());
 
-        ConsolePrint.printInfo("Similarity algorithm scores will be used in output data");
+        if (getAddSimilarityScore())
+            ConsolePrint.printInfo("Similarity algorithm scores will be used in output data");
+        else
+            ConsolePrint.printInfo("Similarity algorithm scores will NOT be used in output data");
     }
 
     private void specifyNewDataOutputFileName() {
