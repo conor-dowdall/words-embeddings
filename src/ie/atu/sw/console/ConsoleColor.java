@@ -1,7 +1,7 @@
 package ie.atu.sw.console;
 
 /*
- * ANSI escape sequences are a standard for controlling cursor location, colour, 
+ * ANSI escape sequences are a standard for controlling cursor location, color, 
  * font styling, and other options on DOS, Mac and Linux terminals. The ANSI escape 
  * codes are formatted as follows:
  * 
@@ -9,11 +9,11 @@ package ie.atu.sw.console;
  *  
  *  See https://en.wikipedia.org/wiki/ANSI_escape_code for a decent description.
  */
-public enum ConsoleColour {
+public enum ConsoleColor {
     // Reset
     RESET("Reset", "0"),
 
-    // Regular Colours
+    // Regular Colors
     BLACK("Black [Regular]", "0;30"),
     RED("Red [Regular]", "0;31"),
     GREEN("Green [Regular]", "0;32"),
@@ -88,23 +88,23 @@ public enum ConsoleColour {
     private static final String CTRL_SEQ_INTRO = "\033[";
     private static final String CTRL_SEQ_END = "m"; // Terminates control
     private final String description;
-    private final String colour;
+    private final String color;
 
-    ConsoleColour(String description, String colour) {
+    ConsoleColor(String description, String color) {
         this.description = description;
-        this.colour = colour;
+        this.color = color;
     }
 
     public String description() {
         return this.description;
     }
 
-    public String colour() {
+    public String color() {
         return toString();
     }
 
     @Override
     public String toString() {
-        return CTRL_SEQ_INTRO + this.colour + CTRL_SEQ_END;
+        return CTRL_SEQ_INTRO + this.color + CTRL_SEQ_END;
     }
 }

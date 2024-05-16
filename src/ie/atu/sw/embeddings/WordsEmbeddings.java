@@ -8,7 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
 
-import ie.atu.sw.console.ConsoleColour;
+import ie.atu.sw.console.ConsoleColor;
 import ie.atu.sw.console.ConsoleProgressMeter;
 import ie.atu.sw.util.Array;
 import ie.atu.sw.util.SimilarityAlgorithm;
@@ -304,7 +304,7 @@ public class WordsEmbeddings {
         String[] wordAndEmbeddings = embeddingsFileLine.split(this.delimiter);
 
         if (wordAndEmbeddings.length != this.numberOfFeatures + 1) {
-            System.out.println(ConsoleColour.RESET + "\n");
+            System.out.println(ConsoleColor.RESET + "\n");
             throw new Exception(
                     "Line #" + (lineNumber + 1) + " in " + this.fileName + " has a different format.");
         }

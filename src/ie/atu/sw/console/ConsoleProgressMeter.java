@@ -54,17 +54,17 @@ public class ConsoleProgressMeter {
          * start of the current line. Calling print(...) overwrites the
          * existing line and creates the illusion of an animation.
          */
-        ConsoleColour consoleColour = ConsoleColour.YELLOW;
+        ConsoleColor consoleColor = ConsoleColor.YELLOW;
         if (complete > 80)
-            consoleColour = ConsoleColour.GREEN_BOLD_BRIGHT;
+            consoleColor = ConsoleColor.GREEN_BOLD_BRIGHT;
         else if (complete > 50)
-            consoleColour = ConsoleColour.GREEN_BRIGHT;
+            consoleColor = ConsoleColor.GREEN_BRIGHT;
 
         System.out.print(
-                "\r" + ConsoleColour.BLACK_BACKGROUND + consoleColour + sb + "] " + complete + "%");
+                "\r" + ConsoleColor.BLACK_BACKGROUND + consoleColor + sb + "] " + complete + "%");
 
         // Once the meter reaches its max, move to a new line.
         if (index == total)
-            System.out.println(ConsoleColour.RESET);
+            System.out.println(ConsoleColor.RESET);
     }
 }
