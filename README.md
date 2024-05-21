@@ -65,6 +65,6 @@ terminal-based application to interact with vector representations for words, e.
 1. **Dot Product**
 2. **Euclidean Distance (No Square Root)**
 3. **Euclidean Distance**
-4. **Cosine Distance**
+4. **Cosine Similarity**
 
 **Vector** static methods for vector operations like add, subtract, dot product

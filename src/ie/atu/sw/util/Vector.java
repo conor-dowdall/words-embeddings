@@ -79,7 +79,7 @@ public class Vector {
         return Math.sqrt(euclideanDistanceNoSqrt(vector1, vector2));
     }
 
-    public static double cosineDistance(double[] vector1, double[] vector2) throws Exception {
+    public static double cosineSimilarity(double[] vector1, double[] vector2) throws Exception {
         return dotProduct(vector1, vector2) / Math.sqrt(sum(square(vector1)) * sum(square(vector2)));
     }
 }

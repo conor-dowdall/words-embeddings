@@ -20,10 +20,10 @@ public enum SimilarityAlgorithm {
 
         }
     },
-    COSINE_DISTANCE("Cosine Distance") {
+    COSINE_SIMILARITY("Cosine Similarity") {
         @Override
         public double calculate(double[] vector1, double[] vector2) throws Exception {
-            return Vector.cosineDistance(vector1, vector2);
+            return Vector.cosineSimilarity(vector1, vector2);
         }
     };
 
