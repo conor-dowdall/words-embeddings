@@ -14,6 +14,16 @@ import ie.atu.sw.util.Array;
 import ie.atu.sw.util.SimilarityAlgorithm;
 import ie.atu.sw.util.Vector;
 
+/**
+ * <p>
+ * load-and-interact-with a words-embeddings file
+ * </p>
+ * <ul>
+ * <li>csv format detection</li>
+ * <li>word vector operations (search, add, subtract, multiply, divide)</li>
+ * <li>similarity algorithms to find similar/dissimilar words</li>
+ * </ul>
+ */
 public class WordsEmbeddings {
 
     private String fileName;
@@ -28,16 +38,42 @@ public class WordsEmbeddings {
     private String[] previousSimilarWords;
     private double[] previousSimilarWordsScores;
 
-    private SimilarityAlgorithm similarityAlgorithm = SimilarityAlgorithm.COSINE_DISTANCE;
+    private SimilarityAlgorithm similarityAlgorithm = SimilarityAlgorithm.COSINE_SIMILARITY;
 
+    /**
+     * <p>
+     * create a WordsEmbeddings instance by loading a words-embeddings file from
+     * a file name
+     * </p>
+     * <p>
+     * stores the file name
+     * </p>
+     * <p>
+     * loads the words, and word vectors from the file name
+     * </p>
+     * 
+     * @param fileName - a file name to load words-embeddings from
+     * @throws Exception
+     */
     public WordsEmbeddings(String fileName) throws Exception {
         setFileName(fileName);
     }
 
+    /**
+     * get the loaded words-embeddings file name
+     * 
+     * @return the loaded words-embeddings file name
+     */
     public String getFileName() {
         return fileName;
     }
 
+    /**
+     * set, and load, a words-embeddings file name
+     * 
+     * @param fileName - a file name to load words-embeddings from
+     * @throws Exception
+     */
     private void setFileName(String fileName) throws Exception {
         this.fileName = fileName;
         setWordsAndEmbeddings();

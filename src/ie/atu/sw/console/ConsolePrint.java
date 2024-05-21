@@ -1,6 +1,14 @@
 package ie.atu.sw.console;
 
+/**
+ * a class with static methods for consistent message printing
+ */
 public class ConsolePrint {
+    /**
+     * print a stylized title to the terminal
+     * 
+     * @param title - a string to be stylized as a title
+     */
     public static void printTitle(String title) {
         System.out.print(ConsoleColor.BLACK_BACKGROUND);
         System.out.print(ConsoleColor.CYAN_BOLD);
@@ -12,6 +20,11 @@ public class ConsolePrint {
         System.out.println();
     }
 
+    /**
+     * print a stylized option list to the terminal
+     * 
+     * @param options - a list of options to be stylized as an options menu
+     */
     public static void printMenuOptions(String[] options) {
         System.out.print(ConsoleColor.BLACK_BACKGROUND);
         System.out.print(ConsoleColor.GREEN_BOLD_BRIGHT);
@@ -27,12 +40,22 @@ public class ConsolePrint {
         System.out.print(ConsoleColor.RESET);
     }
 
+    /**
+     * print a stylized heading to the terminal
+     * 
+     * @param heading - a string to be stylized as a heading
+     */
     public static void printHeading(String heading) {
         System.out.println();
         printWithUnderline(heading);
         System.out.println();
     }
 
+    /**
+     * print an underlined string to the terminal
+     * 
+     * @param text - a string to be underlined
+     */
     public static void printWithUnderline(String text) {
         System.out.print(ConsoleColor.BLACK_BACKGROUND);
         System.out.print(ConsoleColor.WHITE_UNDERLINED);
@@ -40,6 +63,11 @@ public class ConsolePrint {
         System.out.print(ConsoleColor.RESET);
     }
 
+    /**
+     * print stylized information-text to the terminal
+     * 
+     * @param info - a string to be stylized as information-text
+     */
     public static void printInfo(String info) {
         System.out.println();
         System.out.print(ConsoleColor.BLACK_BACKGROUND);
@@ -49,6 +77,11 @@ public class ConsolePrint {
         System.out.println();
     }
 
+    /**
+     * print stylized warning-text to the terminal
+     * 
+     * @param warning - a string to be stylized as warning-text
+     */
     public static void printWarning(String warning) {
         System.out.println();
         System.out.print(ConsoleColor.BLACK_BACKGROUND);
@@ -58,6 +91,11 @@ public class ConsolePrint {
         System.out.println();
     }
 
+    /**
+     * print stylized error-text to the terminal
+     * 
+     * @param error - a string to be stylized as error-text
+     */
     public static void printError(String error) {
         System.err.println();
         System.err.print(ConsoleColor.BLACK_BACKGROUND);
