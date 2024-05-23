@@ -1,13 +1,13 @@
 package ie.atu.sw.util;
 
 public class Vector {
-    public static void ensureEqualLengths(double[] vector1, double[] vector2) throws Exception {
+    public static void assertEqualLengths(double[] vector1, double[] vector2) throws Exception {
         if (vector1.length != vector2.length)
             throw new Exception("The two vector arrays must be of the same length.");
     }
 
     public static double[] add(double[] vector1, double[] vector2) throws Exception {
-        ensureEqualLengths(vector1, vector2);
+        assertEqualLengths(vector1, vector2);
 
         double[] result = new double[vector1.length];
 
@@ -18,7 +18,7 @@ public class Vector {
     }
 
     public static double[] subtract(double[] vector1, double[] vector2) throws Exception {
-        ensureEqualLengths(vector1, vector2);
+        assertEqualLengths(vector1, vector2);
 
         double[] result = new double[vector1.length];
 
@@ -29,7 +29,7 @@ public class Vector {
     }
 
     public static double[] multiply(double[] vector1, double[] vector2) throws Exception {
-        ensureEqualLengths(vector1, vector2);
+        assertEqualLengths(vector1, vector2);
 
         double[] result = new double[vector1.length];
 
@@ -40,7 +40,7 @@ public class Vector {
     }
 
     public static double[] divide(double[] vector1, double[] vector2) throws Exception {
-        ensureEqualLengths(vector1, vector2);
+        assertEqualLengths(vector1, vector2);
 
         double[] result = new double[vector1.length];
 
