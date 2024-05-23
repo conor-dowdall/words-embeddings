@@ -6,7 +6,7 @@ terminal-based application to interact with vector representations for words, e.
 
 - openjdk 17.0.10 2024-01-16
 - robust error handling
-- persistent settings storage
+- persistent settings storage, using java.util.prefs.Preferences
 
 ### Console
 
@@ -28,7 +28,7 @@ terminal-based application to interact with vector representations for words, e.
 
 **MainMenuItem** enum for main menu options with auto-generated shortcuts
 
-**MainMenu** handles user interactions and application launches; prompts for a word embeddings file, if not loaded
+**MainMenu** handles user interactions and application launches; prompts for a words-embeddings file, if not loaded
 1. **Find Similar Words** finds top matching words for a given input
 2. **Find Dissimilar Words** finds least matching words for a given input
 3. **Word Calculator** performs vector operations and finds top matching words
