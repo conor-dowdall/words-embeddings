@@ -47,9 +47,9 @@ terminal-based application to interact with vector representations for words, e.
 8. **Reset Settings to Defaults**
 9. **Print Current Settings**
 
-**SimilarityAlgorithmMenuItem** turn utility class into a menu
+**SimilarityAlgorithmMenuItem** turn the SimilarityAlgorithm utility class into a menu
 
-**WordCalculatorMenuItem** enum for calculator options
+**WordCalculatorMenuItem** enum for word-calculator-menu options
 
 **WordCalculatorMenu** perform vector operations on words' embeddings
 1. **Add**
