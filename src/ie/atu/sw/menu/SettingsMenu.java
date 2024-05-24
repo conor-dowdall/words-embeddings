@@ -14,13 +14,12 @@ import ie.atu.sw.util.SimilarityAlgorithm;
 public class SettingsMenu {
 
     private Scanner inputScanner;
-    private Preferences preferences;
+    private Preferences preferences = Preferences.userNodeForPackage(SettingsMenu.class);
     private boolean keepSettingsOpen;
     private WordsEmbeddings wordsEmbeddings;
 
     public SettingsMenu(Scanner inputScanner) {
         this.inputScanner = inputScanner;
-        this.preferences = Preferences.userNodeForPackage(SettingsMenu.class);
     }
 
     public WordsEmbeddings getWordsEmbeddings() {
