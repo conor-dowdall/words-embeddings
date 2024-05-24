@@ -11,6 +11,10 @@ import ie.atu.sw.console.ConsolePrint;
 import ie.atu.sw.embeddings.WordsEmbeddings;
 import ie.atu.sw.util.SimilarityAlgorithm;
 
+/**
+ * class to store user preferences with persistent values (using
+ * java.util.prefs.Preferences); default settings are included
+ */
 public class SettingsMenu {
 
     private Scanner inputScanner;
@@ -18,56 +22,128 @@ public class SettingsMenu {
     private boolean keepSettingsOpen;
     private WordsEmbeddings wordsEmbeddings;
 
+    /**
+     * create a new settings menu instance and set up the input scanner
+     * 
+     * @param inputScanner - pass in a scanner to read input from the terminal
+     */
     public SettingsMenu(Scanner inputScanner) {
         this.inputScanner = inputScanner;
     }
 
+    /**
+     * get the WordsEmbeddings instance used in this class
+     * 
+     * @return the instance of WordsEmbeddings used in this class
+     */
     public WordsEmbeddings getWordsEmbeddings() {
         return this.wordsEmbeddings;
     }
 
+    /**
+     * get the stored file name used when the words-embeddings file was loaded
+     * 
+     * @return - the words-embeddings file name
+     */
     private String getWordsEmbeddingsFileName() {
         return this.preferences.get("wordsEmbeddingsFileName", "./word-embeddings.txt");
     }
 
+    /**
+     * set and store the words-embeddings file name
+     * 
+     * @param fileName - the words-embeddings file name
+     */
     private void setWordsEmbeddingsFileName(String fileName) {
         this.preferences.put("wordsEmbeddingsFileName", fileName);
     }
 
+    /**
+     * get the stored number of similarities to find (defaults to 10)
+     * 
+     * @return the stored number of similarities to find (defaults to 10)
+     */
     public int getNumberOfSimilaritiesToFind() {
         return this.preferences.getInt("numberOfSimilaritiesToFind", 10);
     }
 
+    /**
+     * set and store the number of similarities to find
+     * 
+     * @param number the number of similarities to find
+     */
     private void setNumberOfSimilaritiesToFind(int number) {
         this.preferences.putInt("numberOfSimilaritiesToFind", number);
     }
 
+    /**
+     * get the stored similarity algorithm to use in word searches (defaults to
+     * cosine similarity, which is represented with the shortcut '4' in
+     * SimilarityAlgorithmMenuItem)
+     * 
+     * @return the current similarity algorithm to use in word searches
+     * @throws Exception
+     */
     public SimilarityAlgorithm getSimilarityAlgorithm() throws Exception {
         String algorithmNumber = this.preferences.get("similarityAlgorithmNumber", "4");
         return SimilarityAlgorithmMenuItem.valueOfKey(algorithmNumber);
     }
 
+    /**
+     * set and store the similarity algorithm to use in word searches (stored as an
+     * integer, which corresponds to a shortcut in SimilarityAlgorithmMenuItem)
+     * 
+     * @param algorithm - the similarity algorithm to use in word searches
+     */
     private void setSimilarityAlgorithm(SimilarityAlgorithm algorithm) {
         String algorithmNumber = Integer.toString(algorithm.ordinal() + 1);
         this.preferences.put("similarityAlgorithmNumber", algorithmNumber);
     }
 
+    /**
+     * get the boolean representing whether the similarity score should be used in
+     * the data output (defaults to false)
+     * 
+     * @return whether the similarity score should be used in the data output
+     */
     public boolean getAddSimilarityScore() {
         return this.preferences.getBoolean("addSimilarityScore", false);
     }
 
+    /**
+     * set and store whether the similarity score should be used in the data output
+     * 
+     * @param append - whether the similarity score should be used in the data
+     *               output
+     */
     private void setAddSimilarityScore(boolean append) {
         this.preferences.putBoolean("addSimilarityScore", append);
     }
 
+    /**
+     * get the currently set data-output file name (defaults to ./out.txt)
+     * 
+     * @return the currently set data-output file name (defaults to ./out.txt)
+     */
     public String getDataOutputFileName() {
         return this.preferences.get("dataOutputFileName", "./out.txt");
     }
 
+    /**
+     * set the data-output file name to use
+     * 
+     * @param fileName - the data-output file name to use
+     */
     private void setDataOutputFileName(String fileName) {
         this.preferences.put("dataOutputFileName", fileName);
     }
 
+    /**
+     * get a BufferedWriter pointing to the currently set data-output file name
+     * 
+     * @return a BufferedWriter pointing to the currently set data-output file name
+     * @throws IOException
+     */
     public BufferedWriter getDataOutputBufferedWriter() throws IOException {
         File dataOutputFile = new File(getDataOutputFileName());
         FileWriter dataOutputFileWriter = new FileWriter(dataOutputFile, getAppendDataOutputFile());
@@ -75,15 +151,39 @@ public class SettingsMenu {
         return dataOutputBufferedWriter;
     }
 
+    /**
+     * get a boolean representing whether data should be appended to (true) or
+     * should overwrite (false) the data-output file (defaults to true)
+     * 
+     * @return whether data should be appended to (true) or should overwrite (false)
+     *         the data-output file
+     */
     public boolean getAppendDataOutputFile() {
         return this.preferences.getBoolean("appendDataOutputFile", true);
     }
 
+    /**
+     * set whether data should be appended to (true) or should overwrite (false) the
+     * data-output file
+     * 
+     * @param append - whether data should be appended to (true) or should overwrite
+     *               (false) the data-output file
+     */
     private void setAppendDataOutputFile(boolean append) {
         this.preferences.putBoolean("appendDataOutputFile", append);
     }
 
-    public String getSettingsAsHeading(String dataInput, boolean similar) throws Exception {
+    /**
+     * format the search parameter used for display as a heading, along with other
+     * relevant settings
+     * 
+     * @param dataHeadingText - text representing the search value(s) used, to
+     *                        appear in the heading, along with other heading info
+     * @param similar         - were similarities or dissimilarities found?
+     * @return the formatted heading text
+     * @throws Exception
+     */
+    public String getSettingsAsHeading(String dataHeadingText, boolean similar) throws Exception {
         String heading = getNumberOfSimilaritiesToFind() + " ";
         heading += getAddSimilarityScore()
                 ? "Scores/"
@@ -91,16 +191,25 @@ public class SettingsMenu {
         heading += similar
                 ? "Words Similar to '"
                 : "Words Dissimilar to '";
-        heading += dataInput + "'";
+        heading += dataHeadingText + "'";
         heading += " using " + getSimilarityAlgorithm() + ":";
 
         return heading;
     }
 
-    public void printDataOutput(String dataInput, boolean similar) throws Exception {
+    /**
+     * neatly print the most recently searched-for WordsEmbeddings matches to the
+     * stored data-output file
+     * 
+     * @param dataHeadingText - text representing the search value(s) used, to
+     *                        appear in the heading, along with other heading info
+     * @param similar         - were similarities or dissimilarities found?
+     * @throws Exception
+     */
+    public void printDataOutput(String dataHeadingText, boolean similar) throws Exception {
         BufferedWriter dataOutputBufferedWriter = getDataOutputBufferedWriter();
 
-        String heading = getSettingsAsHeading(dataInput, similar);
+        String heading = getSettingsAsHeading(dataHeadingText, similar);
 
         ConsolePrint.printHeading(heading);
         dataOutputBufferedWriter.write(heading);
@@ -125,6 +234,7 @@ public class SettingsMenu {
         dataOutputBufferedWriter.close();
     }
 
+    /** print the menu title, offer options to user, and process user input */
     public void launchMenu() throws Exception {
         keepSettingsOpen = true;
 
@@ -134,6 +244,11 @@ public class SettingsMenu {
         processInput();
     }
 
+    /**
+     * read the user input, and take appropriate action
+     * 
+     * @throws Exception
+     */
     private void processInput() throws Exception {
 
         try {
@@ -164,6 +279,13 @@ public class SettingsMenu {
 
     }
 
+    /**
+     * check if a words-embeddings file was loaded and, if not, offer to load one;
+     * also apply the currently set similarity algorithm to the current
+     * WordsEmbeddings class
+     * 
+     * @throws Exception
+     */
     public void initWordsEmbeddings() throws Exception {
         if (this.wordsEmbeddings == null)
             loadNewWordsEmbeddingsFile();
@@ -171,6 +293,11 @@ public class SettingsMenu {
         this.wordsEmbeddings.setSimilarityAlgorithm(getSimilarityAlgorithm());
     }
 
+    /**
+     * load a new words-embeddings file from user text-input in the terminal
+     * 
+     * @throws Exception
+     */
     public void loadNewWordsEmbeddingsFile() throws Exception {
         ConsolePrint.printHeading("Load Words-Embeddings File");
 
