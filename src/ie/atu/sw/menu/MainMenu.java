@@ -5,22 +5,39 @@ import java.util.Scanner;
 
 import ie.atu.sw.console.ConsolePrint;
 
+/**
+ * <p>
+ * handle user interactions and application launches
+ * </p>
+ * <p>
+ * when launching an application, prompt for a words-embeddings file, if not
+ * loaded
+ * </p>
+ * <ul>
+ * <li>[1] Launch 'Find Similar Words'</li>
+ * <li>[2] Launch 'Find Dissimilar Words'</li>
+ * <li>[3] Launch 'Word Calculator'</li>
+ * <li>[4] Settings</li>
+ * <li>[q] Quit</li>
+ * </ul>
+ */
 public class MainMenu {
     private Scanner inputScanner = new Scanner(System.in);
-    private SettingsMenu settingsMenu;
+    private SettingsMenu settingsMenu = new SettingsMenu(this.inputScanner);
 
-    public MainMenu() {
-        this.settingsMenu = new SettingsMenu(this.inputScanner);
-    }
-
-    public void launchMenu() throws Exception {
+    /** display options to user and process the user's choice */
+    public void launchMenu() {
         MainMenuItem.printTitle();
         MainMenuItem.printOptions();
 
         processInput();
     }
 
-    private void processInput() throws Exception {
+    /**
+     * accept user input from terminal, process it, and launch appropriate
+     * action/application; handle all errors in the method
+     */
+    private void processInput() {
         try {
 
             String input = this.inputScanner.nextLine();
@@ -45,14 +62,31 @@ public class MainMenu {
 
     }
 
+    /**
+     * Launch 'Find Similar Words'
+     * 
+     * @throws Exception
+     */
     private void launchSimilarWords() throws Exception {
         launchSimilarWords(true);
     }
 
+    /**
+     * Launch 'Find Dissimilar Words'
+     * 
+     * @throws Exception
+     */
     private void launchDissimilarWords() throws Exception {
         launchSimilarWords(false);
     }
 
+    /**
+     * Find similar-or-dissimilar words to a word, or words, entered in the
+     * terminal. Various customizations are available in the settings menu.
+     * 
+     * @param similar - find similar, or dissimilar words?
+     * @throws Exception
+     */
     private void launchSimilarWords(boolean similar) throws Exception {
         settingsMenu.initWordsEmbeddings();
 
@@ -89,14 +123,27 @@ public class MainMenu {
 
     }
 
+    /**
+     * Launch 'Word Calculator'
+     * 
+     * @throws Exception
+     */
     private void launchWordCalculator() throws Exception {
         new WordCalculatorMenu(this.inputScanner, this.settingsMenu).launchMenu();
     }
 
+    /**
+     * Display Settings Menu
+     * 
+     * @throws Exception
+     */
     private void launchSettingsMenu() throws Exception {
         settingsMenu.launchMenu();
     }
 
+    /**
+     * Quit program
+     */
     private void quitProgram() {
         this.inputScanner.close();
         ConsolePrint.printInfo("Quit");
