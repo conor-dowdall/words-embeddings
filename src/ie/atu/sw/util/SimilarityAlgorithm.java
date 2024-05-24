@@ -1,5 +1,9 @@
 package ie.atu.sw.util;
 
+/**
+ * enum defining different similarity algorithms, which each implement a
+ * calculate method
+ */
 public enum SimilarityAlgorithm {
     DOT_PRODUCT("Dot Product") {
         @Override
