@@ -5,6 +5,10 @@ import java.util.Scanner;
 
 import ie.atu.sw.console.ConsolePrint;
 
+/**
+ * handle user interactions which perform vector operations on words, and
+ * return word-search results
+ */
 public class WordCalculatorMenu {
     private Scanner inputScanner;
     private SettingsMenu settingsMenu;
@@ -12,6 +16,14 @@ public class WordCalculatorMenu {
     private double[] currentEmbedding;
     private boolean keepWordCalculatorOpen;
 
+    /**
+     * initialize the class and ensure that a words-embeddings file has been
+     * initialized
+     * 
+     * @param inputScanner - scanner to accept user input from the terminal
+     * @param settingsMenu - the settings menu where all user preferences are stored
+     * @throws Exception
+     */
     public WordCalculatorMenu(Scanner inputScanner, SettingsMenu settingsMenu) throws Exception {
         this.inputScanner = inputScanner;
         this.settingsMenu = settingsMenu;
@@ -19,6 +31,12 @@ public class WordCalculatorMenu {
         this.settingsMenu.initWordsEmbeddings();
     }
 
+    /**
+     * when launched, prompt user for a word to begin with - all calculations will
+     * start from the vector representation of this word
+     * 
+     * @throws Exception
+     */
     public void launchMenu() throws Exception {
         this.keepWordCalculatorOpen = true;
 
@@ -40,6 +58,13 @@ public class WordCalculatorMenu {
         printOptionsAndProcessInput();
     }
 
+    /**
+     * show a nice heading, including all previous inputs from user; and offer
+     * options for further calculations, then launch appropriate action, and print
+     * data-output, based on user settings
+     * 
+     * @throws Exception
+     */
     private void printOptionsAndProcessInput() throws Exception {
         try {
 
@@ -96,6 +121,11 @@ public class WordCalculatorMenu {
 
     }
 
+    /**
+     * a consistent way to prompt user for a word input
+     * 
+     * @return a sanitized version of the word input (a single lowercase word)
+     */
     private String processWordInput() {
         System.out.print("Enter a word: ");
 
@@ -106,6 +136,14 @@ public class WordCalculatorMenu {
         return sanitizedInput;
     }
 
+    /**
+     * find similar-or-dissimilar words based on user input and settings, and print
+     * data output
+     * 
+     * @param input - the calculation-type and word that were input by the user
+     *              (used for user feedback)
+     * @throws Exception
+     */
     private void calculateAndPrintOutput(String input) throws Exception {
         this.currentWordCalculation.append(input);
         this.currentWordCalculation.append(";");
@@ -117,7 +155,12 @@ public class WordCalculatorMenu {
         settingsMenu.printDataOutput(this.currentWordCalculation.toString(), true);
     }
 
-    private void quitWordCalculator() throws IOException {
+    /**
+     * allow settings loop to stop running by toggling 'keepWordCalculatorOpen'
+     * boolean
+     * 
+     */
+    private void quitWordCalculator() {
         this.keepWordCalculatorOpen = false;
 
         ConsolePrint.printInfo("Close Word Calculator");
