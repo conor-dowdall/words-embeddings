@@ -281,7 +281,7 @@ public class SettingsMenu {
 
     /**
      * check if a words-embeddings file was loaded and, if not, offer to load one;
-     * also apply the currently set similarity algorithm to the current
+     * also apply the currently-set similarity algorithm to the current
      * WordsEmbeddings class
      * 
      * @throws Exception
@@ -310,6 +310,12 @@ public class SettingsMenu {
         ConsolePrint.printInfo("Words-Embeddings file loaded: " + wordsEmbeddingsFileName);
     }
 
+    /**
+     * prompt user to enter a new number of similarities to find when doing
+     * word-embedding searches, and store the input value
+     * 
+     * @throws Exception
+     */
     private void specifySimilaritiesNumber() throws Exception {
         ConsolePrint.printHeading("Specify Number of Similarities to Find");
 
@@ -320,6 +326,12 @@ public class SettingsMenu {
         ConsolePrint.printInfo("Number of Similarities To Find is set to: " + similarities);
     }
 
+    /**
+     * prompt user to enter a new similarity algorithm to use when doing
+     * word-embedding similarity searches, and store the input value
+     * 
+     * @throws Exception
+     */
     private void specifySimilarityAlgorithm() throws Exception {
         SimilarityAlgorithmMenuItem.printTitle();
         SimilarityAlgorithmMenuItem.printOptions();
@@ -333,6 +345,13 @@ public class SettingsMenu {
         ConsolePrint.printInfo("Similarity Algorithm set to: " + algorithm);
     }
 
+    /**
+     * method that gives a consistent way to ask user for a file name; provides
+     * option to hit ENTER for a default file name
+     * 
+     * @param defaultFileName - a default file name which is chosen by hitting ENTER
+     * @return the user-defined file name
+     */
     private String scanFileName(String defaultFileName) {
         ConsolePrint.printInfo("hit ENTER for default: " + defaultFileName);
         System.out.print("Enter file name: ");
@@ -344,6 +363,13 @@ public class SettingsMenu {
         return input;
     }
 
+    /**
+     * prompt user to enter a new number of similarities to find when doing
+     * word-embedding searches
+     * 
+     * @return the user-defined number of similarities to find
+     * @throws Exception
+     */
     private int scanSimilarities() throws Exception {
         try {
 
@@ -372,6 +398,10 @@ public class SettingsMenu {
 
     }
 
+    /**
+     * toggle a boolean defining whether or not to use similarity score in the data
+     * output; and store the value
+     */
     private void toggleAddSimilarityScore() {
         setAddSimilarityScore(!getAddSimilarityScore());
 
@@ -381,6 +411,9 @@ public class SettingsMenu {
             ConsolePrint.printInfo("Similarity algorithm scores will NOT be used in output data");
     }
 
+    /**
+     * prompt the user to enter a new data-output file name; and store the value
+     */
     private void specifyNewDataOutputFileName() {
         ConsolePrint.printHeading("Specify Data-Output File");
 
@@ -394,6 +427,10 @@ public class SettingsMenu {
             ConsolePrint.printInfo("Data output will now overwrite " + getDataOutputFileName());
     }
 
+    /**
+     * toggle a boolean defining whether to append new results to the data-output
+     * file (true), or overwrite the data-output file (false); and store the value
+     */
     private void toggleAppendDataOutputFile() {
         setAppendDataOutputFile(!getAppendDataOutputFile());
 
@@ -403,6 +440,11 @@ public class SettingsMenu {
             ConsolePrint.printInfo("Data output will now overwrite " + getDataOutputFileName());
     }
 
+    /**
+     * empty the currently-set data-output file, if it exists
+     * 
+     * @throws Exception if there is a problem with the file handling
+     */
     private void emptyDataOutputFile() throws Exception {
         try {
 
@@ -418,6 +460,11 @@ public class SettingsMenu {
         ConsolePrint.printInfo("Data-Output file is now empty: " + getDataOutputFileName());
     }
 
+    /**
+     * reset all settings to their defaults by clearing the preferences
+     * 
+     * @throws Exception
+     */
     private void resetSettings() throws Exception {
         this.preferences.clear();
 
@@ -425,6 +472,11 @@ public class SettingsMenu {
         printSettings();
     }
 
+    /**
+     * a consistent way to print all the settings
+     * 
+     * @throws Exception
+     */
     public void printSettings() throws Exception {
 
         String wordsEmbeddingsFileName = this.wordsEmbeddings == null ? "NOT SET" : this.wordsEmbeddings.getFileName();
@@ -439,6 +491,9 @@ public class SettingsMenu {
         System.out.println();
     }
 
+    /**
+     * allow settings loop to stop running by toggling 'keepSettingsOpen' boolean
+     */
     private void quitSettings() {
         this.keepSettingsOpen = false;
 
