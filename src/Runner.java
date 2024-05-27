@@ -1,4 +1,3 @@
-
 import ie.atu.sw.menu.MainMenu;
 
 public class Runner {
