@@ -169,7 +169,7 @@ public class SettingsMenu {
      * @param append - whether data should be appended to (true) or should overwrite
      *               (false) the data-output file
      */
-    private void setAppendDataOutputFile(boolean append) {
+    public void setAppendDataOutputFile(boolean append) {
         this.preferences.putBoolean("appendDataOutputFile", append);
     }
 
