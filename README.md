@@ -4,7 +4,7 @@
 
 terminal-based application to interact with vector representations for words, e.g. from [GloVe](https://nlp.stanford.edu/projects/glove/)
 
-- openjdk 17.0.10 2024-01-16
+- openjdk 21.0.3 2024-04-16
 - robust error handling
 - persistent settings storage, using java.util.prefs.Preferences
 
