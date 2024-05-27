@@ -77,35 +77,31 @@ public class WordCalculatorMenu {
             switch (item) {
                 case ADD -> {
                     input = processWordInput();
-                    this.currentWordCalculation.append(" + ");
                     this.currentEmbedding = this.settingsMenu.getWordsEmbeddings().add(
                             this.currentEmbedding,
                             input);
-                    calculateAndPrintOutput(input);
+                    calculateAndPrintOutput(" + " + input);
                 }
                 case SUBTRACT -> {
                     input = processWordInput();
-                    this.currentWordCalculation.append(" - ");
                     this.currentEmbedding = this.settingsMenu.getWordsEmbeddings().subtract(
                             this.currentEmbedding,
                             input);
-                    calculateAndPrintOutput(input);
+                    calculateAndPrintOutput(" - " + input);
                 }
                 case MULTIPLY -> {
                     input = processWordInput();
-                    this.currentWordCalculation.append(" * ");
                     this.currentEmbedding = this.settingsMenu.getWordsEmbeddings().multiply(
                             this.currentEmbedding,
                             input);
-                    calculateAndPrintOutput(input);
+                    calculateAndPrintOutput(" * " + input);
                 }
                 case DIVIDE -> {
                     input = processWordInput();
-                    this.currentWordCalculation.append(" / ");
                     this.currentEmbedding = this.settingsMenu.getWordsEmbeddings().divide(
                             this.currentEmbedding,
                             input);
-                    calculateAndPrintOutput(input);
+                    calculateAndPrintOutput(" / " + input);
                 }
                 case QUIT -> quitWordCalculator();
             }
