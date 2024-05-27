@@ -104,23 +104,43 @@ public class MainMenu {
         ConsolePrint.printInfo("Interpreting input as: '" + sanitizedInput + "'");
         String[] words = sanitizedInput.split(" ");
 
-        for (String word : words) {
+        // write the first word using the current setting for appending or overwriting
+        // the data output file
+        try {
 
+            settingsMenu.getWordsEmbeddings().getSimilarWords(
+                    words[0],
+                    settingsMenu.getNumberOfSimilaritiesToFind(),
+                    similar);
+
+            settingsMenu.printDataOutput(words[0], similar);
+
+        } catch (Exception e) {
+            ConsolePrint.printError(e.getMessage());
+        }
+
+        // temporarily use append mode
+        // write the rest of the word-search results, if they exist
+        // then set it back to user value
+        // so multiple words can be written to data output file from one input
+        // without overwriting previous words (from same input)
+        boolean appendData = settingsMenu.getAppendDataOutputFile();
+        settingsMenu.setAppendDataOutputFile(true);
+        for (int i = 1; i < words.length; i++) {
             try {
 
                 settingsMenu.getWordsEmbeddings().getSimilarWords(
-                        word,
+                        words[i],
                         settingsMenu.getNumberOfSimilaritiesToFind(),
                         similar);
 
-                settingsMenu.printDataOutput(word, similar);
+                settingsMenu.printDataOutput(words[i], similar);
 
             } catch (Exception e) {
                 ConsolePrint.printError(e.getMessage());
             }
-
         }
-
+        settingsMenu.setAppendDataOutputFile(appendData);
     }
 
     /**
