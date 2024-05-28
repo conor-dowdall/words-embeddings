@@ -37,7 +37,7 @@ terminal-based application to interact with vector representations for words, e.
 **SettingsMenuItem** enum for settings menu options with auto-generated shortcuts
 
 **SettingsMenu** store user preferences with persistent values; default settings included
-1. **Load Word-Embeddings File**
+1. **Load Words-Embeddings File**
 2. **Number of Similarities to Find** (0 < n <= #words)
 3. **Similarity Algorithm to Use**
 4. **Toggle Similarity Score in Output**
@@ -51,7 +51,7 @@ terminal-based application to interact with vector representations for words, e.
 
 **WordCalculatorMenuItem** enum for word-calculator-menu options
 
-**WordCalculatorMenu** perform vector operations on words' embeddings
+**WordCalculatorMenu** perform vector operations using words' embeddings
 1. **Add**
 2. **Subtract**
 3. **Multiply**
