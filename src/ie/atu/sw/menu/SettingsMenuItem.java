@@ -7,7 +7,7 @@ import ie.atu.sw.console.ConsolePrint;
  */
 public enum SettingsMenuItem {
 
-    EMBEDDINGS_FILE("Load Word-Embeddings File", null),
+    EMBEDDINGS_FILE("Load Words-Embeddings File", null),
     SIMILARITIES_NUMBER("Number of Similarities to Find", null),
     SIMILARITIES_ALGORITHM("Similarity Algorithm to Use", null),
     TOGGLE_SIMILARITY_SCORE("Toggle Similarity Score in Output", null),
