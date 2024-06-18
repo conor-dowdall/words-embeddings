@@ -435,7 +435,7 @@ public class WordsEmbeddings {
      * 
      * @param word    - the word to search for
      * @param howMany - the number of similarities to find
-     * @return an array of disssimilar words, found using the set similarity
+     * @return an array of dissimilar words, found using the set similarity
      *         algorithm
      * @throws Exception
      */
